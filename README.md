@@ -98,5 +98,5 @@ If you want to get data from a form it will be `validatedForms.myFormName` where
 is the name of one of your `ValidatedReduxForm`s. The only boilerplate you need to do to
 set this up other than using the component is:
 
-`import validatedForms from 'react-validated-form/validatedForm.reducer';`
+`import validatedForms from '@tkdaj/react-validated-form/validatedForm.reducer';`
 `// important! You must use the name 'validatedForms' when adding it to your store otherwise the ValidatedReduxForm component won't be able to update the proper values`
