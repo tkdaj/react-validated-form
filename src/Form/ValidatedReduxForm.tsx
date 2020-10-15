@@ -167,15 +167,6 @@ class ValidatedReduxForm extends React.Component<ValidatedReduxFormProps> {
         }${reduxForm?.formIsValid ? "" : formErrorClass}${className ?? ""}`}
       >
         {(React.Children.toArray(children) as ReactElement[]).map((child) => {
-          // let classes = "";
-          // if (child.props.name) {
-          //   classes = reduxForm?.formValues[child.props.name]?.error
-          //     ? fieldErrorClass
-          //     : "";
-          // }
-          // if (className) {
-          //   classes += classes ? ` ${className}` : className;
-          // }
           const isButton = child.type === "button";
           return isButton
             ? child
@@ -188,14 +179,6 @@ class ValidatedReduxForm extends React.Component<ValidatedReduxFormProps> {
                       child.props.onChange(e);
                     }
                   : this.fieldChanged,
-                // using spead syntax like this to conditionally add properties to this object
-                // ...(classes && {
-                //   className: classes,
-                // }),
-                // ...(reduxForm?.formValues[child.props.name]?.error && {
-                //   "data-error-message":
-                //     reduxForm?.formValues[child.props.name]?.error,
-                // }),
               });
         })}
       </form>

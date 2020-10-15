@@ -147,15 +147,6 @@ export default class ValidatedForm extends React.Component<
         }${formIsValid ? "" : formErrorClass}${className ?? ""}`}
       >
         {(React.Children.toArray(children) as ReactElement[]).map((child) => {
-          // let classes = "";
-          // if (child.props.name) {
-          //   classes = this.state.formValues[child.props.name]?.error
-          //     ? (fieldErrorClass as string)
-          //     : "";
-          // }
-          // if (className) {
-          //   classes += classes ? ` ${className}` : className;
-          // }
           const isButton = child.type === "button";
           return isButton
             ? child
@@ -170,14 +161,6 @@ export default class ValidatedForm extends React.Component<
                       child.props.onChange(e);
                     }
                   : this.fieldChanged,
-                // using spead syntax like this to conditionally add properties to this object
-                // ...(classes && {
-                //   className: classes,
-                // }),
-                // ...(this.state.formValues[child.props.name]?.error && {
-                //   "data-error-message": this.state.formValues[child.props.name]
-                //     ?.error,
-                // }),
               });
         })}
       </form>
