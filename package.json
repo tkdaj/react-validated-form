@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/tkdaj/react-validated-form.git"
   },
-  "module": "",
+  "module": "./src/Form",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",

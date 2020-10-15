@@ -15,7 +15,7 @@ export const getFieldsInForm = (form: HTMLFormElement | null) => {
 
 export const getUpdatedFormValue = (
   el: HTMLFormElement,
-  props: IValidatedFormProps,
+  props: any, //IValidatedFormProps,
   init = false
 ) => {
   const isCheckbox = el.type === "checkbox";

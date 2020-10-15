@@ -10,8 +10,10 @@ import {
   getUpdatedFormValue,
 } from "./shared";
 
+type ValidatedFormProps = Omit<IValidatedFormProps, "onSubmit">;
+
 export default class ValidatedForm extends React.Component<
-  IValidatedFormProps,
+  ValidatedFormProps,
   IValidatedFormState
 > {
   static defaultProps = {

@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { connect } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import {
   IValidatedFormState,
   IValidatedFormProps,
@@ -21,13 +21,11 @@ const mapDispatch = {
   updateValidatedForm,
 };
 
-type StateProps = ReturnType<typeof mapState>;
-type DispatchProps = typeof mapDispatch;
-type ValidatedReduxFormProps = StateProps &
-  DispatchProps &
-  Omit<IValidatedFormProps, "onFormChanged">;
+type OwnProps = Omit<IValidatedFormProps, "onFormChanged" | "onSubmit">;
+const connector = connect(mapState, mapDispatch, null, { forwardRef: true });
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-class ValidatedReduxForm extends React.Component<ValidatedReduxFormProps> {
+class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
   static defaultProps = {
     customValidators: {},
     initialFieldValues: {},
@@ -186,9 +184,4 @@ class ValidatedReduxForm extends React.Component<ValidatedReduxFormProps> {
   }
 }
 
-export default connect<StateProps & DispatchProps & IValidatedFormProps>(
-  mapState,
-  mapDispatch,
-  null,
-  { forwardRef: true }
-)(ValidatedReduxForm);
+export default connector(ValidatedReduxForm);
