@@ -1,6 +1,6 @@
 {
   "name": "@tkdaj/react-validated-form",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A self-validating React form component",
   "author": "tkdaj",
   "repository": {
@@ -35,6 +35,7 @@
     "redux": "^4.0.5"
   },
   "devDependencies": {
+    "@material-ui/core": "^4.11.0",
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-image": "^2.0.5",
     "@rollup/plugin-json": "^4.1.0",

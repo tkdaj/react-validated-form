@@ -1,6 +1,7 @@
 import React, { FC, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { IApplicationState } from 'store';
+import { TextField } from '@material-ui/core';
 import ValidatedReduxForm from './Form/ValidatedReduxForm';
 import ValidatedForm from './Form/ValidatedForm';
 import './demo.scss';
@@ -64,8 +65,14 @@ const Demo: FC<DemoProps> = ({ reduxForms }) => {
             <input name="theradios2" type="radio" value="2" />
             <input name="theradios2" type="radio" value="3" />
           </label>
-          <input name="input1" />
-          <input name="input2" pattern="\d+" required />
+          <TextField
+            name="input2"
+            margin="dense"
+            label="Input 2"
+            type="text"
+            required
+            inputProps={{ pattern: '\\d+' }}
+          />
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label htmlFor="new">test</label>
           <select required name="select" id="new">
@@ -137,7 +144,14 @@ const Demo: FC<DemoProps> = ({ reduxForms }) => {
             <input name="theradios2" type="radio" value="3" />
           </label>
           <input name="input1" />
-          <input name="input2" pattern="\d+" required />
+          <TextField
+            name="input2"
+            margin="dense"
+            label="Input 2"
+            type="text"
+            required
+            inputProps={{ pattern: '\\d+' }}
+          />
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label htmlFor="new">test</label>
           <select required name="select" id="new">
