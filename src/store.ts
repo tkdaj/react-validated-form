@@ -1,5 +1,6 @@
-import { combineReducers, createStore, compose } from "redux";
-import validatedForms from "./Form/validatedForm.reducer";
+import { combineReducers, createStore, compose } from 'redux';
+import validatedForms from './Form/validatedForm.reducer';
+
 const rootReducer = combineReducers({
   validatedForms,
 });

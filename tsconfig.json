@@ -1,10 +1,16 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
     "baseUrl": "src",
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -15,7 +21,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "declarationMap": true,
+    "suppressImplicitAnyIndexErrors": true
   },
   "include": ["src", "linterHelper.js"],
   "exclude": ["node_modules", "**/*.spec.ts"]

@@ -1,17 +1,17 @@
-import React, { ReactElement } from "react";
-import { connect, ConnectedProps } from "react-redux";
+import React, { ReactElement } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
+import { IApplicationState } from 'store';
 import {
   IValidatedFormState,
   IValidatedFormProps,
   FormValues,
-} from "./validatedFormModels";
-import { updateValidatedForm } from "./validatedForm.actions";
-import { IApplicationState } from "store";
+} from './validatedFormModels';
+import { updateValidatedForm } from './validatedForm.actions';
 import {
   getFieldsInForm,
   isFieldValidatable,
   getUpdatedFormValue,
-} from "./shared";
+} from './shared';
 
 const mapState = (state: IApplicationState) => ({
   reduxForms: state.validatedForms,
@@ -21,7 +21,7 @@ const mapDispatch = {
   updateValidatedForm,
 };
 
-type OwnProps = Omit<IValidatedFormProps, "onFormChanged" | "onSubmit">;
+type OwnProps = Omit<IValidatedFormProps, 'onFormChanged' | 'onSubmit'>;
 const connector = connect(mapState, mapDispatch, null, { forwardRef: true });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -29,13 +29,13 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
   static defaultProps = {
     customValidators: {},
     initialFieldValues: {},
-    formErrorClass: "validated-form-error",
+    formErrorClass: 'validated-form-error',
   };
 
   componentDidMount() {
     // Check to make sure all fields have a 'name'
     const initialFieldValues: FormValues = {};
-    getFieldsInForm(this.formRef?.current).forEach((field) => {
+    getFieldsInForm(this.formRef?.current).forEach(field => {
       if (field.name) {
         // If there is custom validation it requires custom errorText
         if (
@@ -43,7 +43,7 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
           !this.props.customValidators[field.name]?.errorText
         ) {
           console.error(
-            "A custom error message must be provided when using a custom isValid function for field:",
+            'A custom error message must be provided when using a custom isValid function for field:',
             field
           );
         }
@@ -54,7 +54,7 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
         );
       } else if (isFieldValidatable(field)) {
         console.error(
-          "You must have a name on all form fields within ValidatedForm",
+          'You must have a name on all form fields within ValidatedForm',
           field
         );
       }
@@ -63,9 +63,7 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
       formName: this.props.name,
       newFormState: {
         submissionAttempted: false,
-        formIsValid: !Object.values(initialFieldValues).find(
-          (val) => val.error
-        ),
+        formIsValid: !Object.values(initialFieldValues).find(val => val.error),
         formValues: initialFieldValues,
       },
     });
@@ -94,7 +92,7 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
     }
   };
 
-  fieldChanged = (e) => {
+  fieldChanged = e => {
     const { target } = e;
     const updatedField = getUpdatedFormValue(target, this.props);
     const newForm = {
@@ -108,9 +106,7 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
       formName: this.props.name,
       newFormState: {
         ...newForm,
-        formIsValid: !Object.values(newForm.formValues).find(
-          (val) => val.error
-        ),
+        formIsValid: !Object.values(newForm.formValues).find(val => val.error),
       },
     });
   };
@@ -131,7 +127,7 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
       newFormState: {
         submissionAttempted: false,
         formValues,
-        formIsValid: !Object.values(formValues).find((val) => val.error),
+        formIsValid: !Object.values(formValues).find(val => val.error),
       },
       formName: this.props.name,
     });
@@ -160,19 +156,19 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
         {...props}
         className={`validated-form ${
           reduxForm?.submissionAttempted
-            ? "validated-form-submission-attempted "
-            : ""
-        }${reduxForm?.formIsValid ? "" : formErrorClass}${className ?? ""}`}
+            ? 'validated-form-submission-attempted '
+            : ''
+        }${reduxForm?.formIsValid ? '' : formErrorClass}${className ?? ''}`}
       >
-        {(React.Children.toArray(children) as ReactElement[]).map((child) => {
-          const isButton = child.type === "button";
+        {(React.Children.toArray(children) as ReactElement[]).map(child => {
+          const isButton = child.type === 'button';
           return isButton
             ? child
             : React.cloneElement(child, {
                 ...child.props,
-                value: reduxForm?.formValues[child.props.name]?.value ?? "",
+                value: reduxForm?.formValues[child.props.name]?.value ?? '',
                 onChange: child.props.onChange
-                  ? (e) => {
+                  ? e => {
                       this.fieldChanged(e);
                       child.props.onChange(e);
                     }

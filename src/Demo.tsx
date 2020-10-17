@@ -1,9 +1,9 @@
-import React, { FC, useRef, useState } from "react";
-import { connect } from "react-redux";
-import ValidatedReduxForm from "./Form/ValidatedReduxForm";
-import ValidatedForm from "./Form/ValidatedForm";
-import { IApplicationState } from "store";
-import "./demo.scss";
+import React, { FC, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { IApplicationState } from 'store';
+import ValidatedReduxForm from './Form/ValidatedReduxForm';
+import ValidatedForm from './Form/ValidatedForm';
+import './demo.scss';
 
 const mapState = (state: IApplicationState) => ({
   reduxForms: state.validatedForms,
@@ -14,7 +14,7 @@ type DemoProps = ReturnType<typeof mapState>;
 const Demo: FC<DemoProps> = ({ reduxForms }) => {
   const reduxFormRef = useRef<typeof ValidatedReduxForm>(null);
   const standardFormRef = useRef<ValidatedForm>(null);
-  const [form2Data, setForm2Data] = useState("");
+  const [form2Data, setForm2Data] = useState('');
   return (
     <div className="demo-container">
       <div className="redux-form-container">
@@ -24,36 +24,49 @@ const Demo: FC<DemoProps> = ({ reduxForms }) => {
           className="redux-form"
           customValidators={{
             input2: {
-              errorText: "You messed up",
+              errorText: 'You messed up',
             },
           }}
           onValidSubmissionAttempt={(e, formData) => {
-            console.log("valid submission");
+            console.log('valid submission');
             console.log(e);
             console.log(formData);
           }}
           onInvalidSubmissionAttempt={(e, formData) => {
-            console.log("invalid submission");
+            console.log('invalid submission');
             console.log(e);
             console.log(formData);
           }}
           initialFieldValues={{
-            select: "1",
+            select: '1',
           }}
         >
           <input name="thecheckbox" type="checkbox" required />
-          <label>
-            <input name="theradios" required type="radio" value="1" />
+          <label htmlFor="theradios">
+            <input
+              id="theradios"
+              name="theradios"
+              required
+              type="radio"
+              value="1"
+            />
             <input name="theradios" type="radio" value="2" />
             <input name="theradios" type="radio" value="3" />
           </label>
-          <label>
-            <input name="theradios2" required type="radio" value="1" />
+          <label htmlFor="theradios2">
+            <input
+              id="theradios2"
+              name="theradios2"
+              required
+              type="radio"
+              value="1"
+            />
             <input name="theradios2" type="radio" value="2" />
             <input name="theradios2" type="radio" value="3" />
           </label>
           <input name="input1" />
           <input name="input2" pattern="\d+" required />
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label htmlFor="new">test</label>
           <select required name="select" id="new">
             <option value="1">1</option>
@@ -81,38 +94,51 @@ const Demo: FC<DemoProps> = ({ reduxForms }) => {
           ref={standardFormRef}
           className="standard-form"
           name="standardForm"
-          onFormChanged={(field, updatedFormState) => {
+          onFormChanged={(_field, updatedFormState) => {
             setForm2Data(JSON.stringify(updatedFormState, null, 2));
           }}
           customValidators={{
             field2: {
-              errorText: "You messed up",
+              errorText: 'You messed up',
             },
           }}
           onValidSubmissionAttempt={(e, formData) => {
-            console.log("valid submission");
+            console.log('valid submission');
             console.log(e);
             console.log(formData);
           }}
           onInvalidSubmissionAttempt={(e, formData) => {
-            console.log("invalid submission");
+            console.log('invalid submission');
             console.log(e);
             console.log(formData);
           }}
         >
           <input name="thecheckbox" type="checkbox" required />
-          <label>
-            <input name="theradios" required type="radio" value="1" />
+          <label htmlFor="theradios">
+            <input
+              id="theradios"
+              name="theradios"
+              required
+              type="radio"
+              value="1"
+            />
             <input name="theradios" type="radio" value="2" />
             <input name="theradios" type="radio" value="3" />
           </label>
-          <label>
-            <input name="theradios2" required type="radio" value="1" />
+          <label htmlFor="theradios2">
+            <input
+              id="theradios2"
+              name="theradios2"
+              required
+              type="radio"
+              value="1"
+            />
             <input name="theradios2" type="radio" value="2" />
             <input name="theradios2" type="radio" value="3" />
           </label>
           <input name="input1" />
           <input name="input2" pattern="\d+" required />
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label htmlFor="new">test</label>
           <select required name="select" id="new">
             <option value="">Default</option>

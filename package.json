@@ -1,12 +1,44 @@
 {
   "name": "@tkdaj/react-validated-form",
   "version": "0.1.1",
+  "description": "A self-validating React form component",
+  "author": "tkdaj",
   "repository": {
     "type": "git",
     "url": "https://github.com/tkdaj/react-validated-form.git"
   },
-  "module": "./src/Form",
-  "dependencies": {
+  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "rimraf": "./node_modules/rimraf/bin.js",
+    "reinstall": "rimraf node_modules || true && npm cache verify && npm ci || npm i",
+    "start": "react-scripts start",
+    "build": "rimraf dist && rollup -c --environment NODE_ENV:production",
+    "test": "react-scripts test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,scss}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.(js|jsx|ts|tsx)": [
+      "pretty-quick --staged",
+      "eslint --fix"
+    ]
+  },
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-image": "^2.0.5",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -14,23 +46,57 @@
     "@types/node": "^12.12.67",
     "@types/react": "^16.9.52",
     "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.13.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.4",
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.1",
     "node-sass": "^4.14.1",
-    "react": "^16.13.1",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.1.0",
+    "react": "^16.14.0",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "react-scripts": "3.4.3",
     "redux": "^4.0.5",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.32.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-includepaths": "^0.2.4",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-peer-deps-external": "^2.2.3",
+    "rollup-plugin-postcss": "^3.1.8",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.28.0",
     "typescript": "^3.7.5"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "prettier": {
+    "printWidth": 80,
+    "useTabs": false,
+    "tabWidth": 2,
+    "semi": true,
+    "quoteProps": "as-needed",
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "jsxBracketSameLine": false,
+    "bracketSpacing": true,
+    "trailingComma": "es5",
+    "arrowParens": "avoid",
+    "requirePragma": false,
+    "htmlWhitespaceSensitivity": "ignore",
+    "endOfLine": "lf"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
+  "files": [
+    "dist"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
@@ -42,5 +108,89 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "eslintConfig": {
+    "plugins": [
+      "jsx-a11y",
+      "prettier"
+    ],
+    "extends": [
+      "react-app",
+      "airbnb",
+      "airbnb/hooks",
+      "plugin:jsx-a11y/recommended",
+      "prettier"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "import/extensions": 0,
+      "no-console": 0,
+      "no-param-reassign": 0,
+      "no-plusplus": [
+        2,
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
+      "no-unused-vars": 0,
+      "no-unused-expressions": 0,
+      "no-debugger": 1,
+      "lines-between-class-members": 0,
+      "react/state-in-constructor": 0,
+      "react/jsx-curly-newline": 0,
+      "react/jsx-filename-extension": 0,
+      "react/jsx-wrap-multilines": 0,
+      "react/jsx-one-expression-per-line": 0,
+      "react/jsx-props-no-spreading": 0,
+      "react/prop-types": 0,
+      "react/destructuring-assignment": 0,
+      "@typescript-eslint/no-unused-expressions": 0,
+      "react/static-property-placement": [
+        2,
+        "static public field"
+      ],
+      "import/no-extraneous-dependencies": 0,
+      "import/prefer-default-export": 0,
+      "react/sort-comp": [
+        1,
+        {
+          "order": [
+            "static-methods",
+            "lifecycle",
+            "everything-else",
+            "render"
+          ]
+        }
+      ]
+    },
+    "settings": {
+      "react": {
+        "version": "16.10.2"
+      },
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx",
+            ".json",
+            ".scss"
+          ],
+          "moduleDirectory": [
+            "node_modules",
+            "src"
+          ]
+        }
+      }
+    },
+    "root": true
   }
 }
