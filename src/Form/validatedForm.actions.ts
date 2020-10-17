@@ -1,8 +1,8 @@
-import { IValidatedFormState } from "./validatedFormModels";
+import { IValidatedFormState } from './validatedFormModels';
 
-export const UPDATE_VALIDATED_FORM = "UPDATE_VALIDATED_FORM";
-export const CLEAR_VALIDATED_FORM = "CLEAR_VALIDATED_FORM";
-export const INIT_VALIDATED_FORM = "INIT_VALIDATED_FORM";
+export const UPDATE_VALIDATED_FORM = 'UPDATE_VALIDATED_FORM';
+export const CLEAR_VALIDATED_FORM = 'CLEAR_VALIDATED_FORM';
+export const INIT_VALIDATED_FORM = 'INIT_VALIDATED_FORM';
 
 export type ValidatedFormAction = {
   type: string;

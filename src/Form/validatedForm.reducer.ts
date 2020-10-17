@@ -1,10 +1,10 @@
-import { IValidatedFormState } from "./validatedFormModels";
+import { IValidatedFormState } from './validatedFormModels';
 import {
   INIT_VALIDATED_FORM,
   CLEAR_VALIDATED_FORM,
   UPDATE_VALIDATED_FORM,
   ValidatedFormAction,
-} from "./validatedForm.actions";
+} from './validatedForm.actions';
 
 export interface IValidatedForms {
   [formName: string]: IValidatedFormState;

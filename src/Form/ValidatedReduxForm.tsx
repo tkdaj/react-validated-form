@@ -168,21 +168,6 @@ export class ValidatedReduxForm extends React.Component<
           getFieldsInForm(this.formRef?.current),
           reduxForm?.formValues,
         ])}
-        {/* {(React.Children.toArray(children) as ReactElement[]).map(child => {
-          const isButton = child.type === 'button';
-          return isButton
-            ? child
-            : React.cloneElement(child, {
-                ...child.props,
-                value: reduxForm?.formValues[child.props.name]?.value ?? '',
-                onChange: child.props.onChange
-                  ? e => {
-                      this.fieldChanged(e);
-                      child.props.onChange(e);
-                    }
-                  : this.fieldChanged,
-              });
-        })} */}
       </form>
     );
   }

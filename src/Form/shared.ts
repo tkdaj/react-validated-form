@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  Children,
-  ReactElement,
-  isValidElement,
-  cloneElement,
-} from 'react';
+import { ReactNode, Children, ReactElement, cloneElement } from 'react';
 import { FormValues } from './validatedFormModels';
 import { ValidatedReduxForm } from './ValidatedReduxForm';
 import ValidatedForm from './ValidatedForm';
@@ -85,38 +79,36 @@ export function attachProps(
   formFields: HTMLFormElement[],
   formValues: FormValues
 ) {
-  return (Children.toArray(startingChildren) as ReactElement<any>[]).map(
-    child => {
-      const { props } = child as ReactElement;
-      const hasChildren = props?.children;
-      const matchingField = formFields.find(item => props?.name === item.name);
-      return isValidElement(child)
-        ? cloneElement(child, {
-            ...props,
-            ...(hasChildren
-              ? {
-                  children: attachProps.apply(this, [
-                    props.children,
-                    formFields,
-                    formValues,
-                  ]),
-                }
-              : null),
-            ...(matchingField
-              ? { value: formValues[props.name]?.value ?? '' }
-              : null),
-            ...(matchingField
-              ? {
-                  onChange: props.onChange
-                    ? e => {
-                        this.fieldChanged(e);
-                        props.onChange(e);
-                      }
-                    : this.fieldChanged,
-                }
-              : null),
-          })
-        : child;
-    }
-  );
+  return Children.map((startingChildren || []) as ReactElement, child => {
+    if (typeof child === 'string') return child;
+    const matchingField = formFields.find(item => {
+      return child?.props?.name === item.name;
+    });
+    return cloneElement(
+      child,
+      {
+        ...child?.props,
+        ...(matchingField
+          ? { value: formValues[child?.props?.name]?.value ?? '' }
+          : null),
+        ...(matchingField
+          ? {
+              onChange: child?.props?.onChange
+                ? e => {
+                    this.fieldChanged(e);
+                    child?.props?.onChange(e);
+                  }
+                : this.fieldChanged,
+            }
+          : null),
+      },
+      child?.props?.children
+        ? attachProps.apply(this, [
+            child?.props?.children,
+            formFields,
+            formValues,
+          ])
+        : null
+    );
+  });
 }
