@@ -8,6 +8,9 @@ and the component keeps track of your errors for you. You can also add custom er
 and a custom function for validation logic per field. Here is an example:
 
 ```typescript
+
+    import { ValidatedReduxForm } from '@tkdaj/react-validated-form';
+
     <ValidatedReduxForm
         name="testForm"
         noValidate
@@ -83,7 +86,10 @@ outside the form:
 In order to access these, create a ref object using `React.createRef()` or the `useRef(null)` hook.
 Then, add the created ref to your `ValidatedForm` like:
 
-`<ValidatedForm name="myForm" ref={this.myFormRef} />`
+```typescript
+import { ValidatedForm } from '@tkdaj/react-validated-form';
+<ValidatedForm name="myForm" ref={this.myFormRef} />;
+```
 
 Once you have done that you can access the functions using the ref. For example:
 `this.myFormRef.current.getFormData()` or `this.myFormRef.current.resetForm()`
@@ -98,5 +104,5 @@ If you want to get data from a form it will be `validatedForms.myFormName` where
 is the name of one of your `ValidatedReduxForm`s. The only boilerplate you need to do to
 set this up other than using the component is:
 
-`import validatedForms from '@tkdaj/react-validated-form/validatedForm.reducer';`
+`import { validatedForms } from '@tkdaj/react-validated-form';`
 `// important! You must use the name 'validatedForms' when adding it to your store otherwise the ValidatedReduxForm component won't be able to update the proper values`
