@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { IApplicationState } from 'store';
 import {
@@ -11,6 +11,7 @@ import {
   getFieldsInForm,
   isFieldValidatable,
   getUpdatedFormValue,
+  attachProps,
 } from './shared';
 
 const mapState = (state: IApplicationState) => ({
@@ -25,7 +26,9 @@ type OwnProps = Omit<IValidatedFormProps, 'onFormChanged' | 'onSubmit'>;
 const connector = connect(mapState, mapDispatch, null, { forwardRef: true });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
+export class ValidatedReduxForm extends React.Component<
+  OwnProps & PropsFromRedux
+> {
   static defaultProps = {
     customValidators: {},
     initialFieldValues: {},
@@ -160,7 +163,12 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
             : ''
         }${reduxForm?.formIsValid ? '' : formErrorClass}${className ?? ''}`}
       >
-        {(React.Children.toArray(children) as ReactElement[]).map(child => {
+        {attachProps.apply(this, [
+          children,
+          getFieldsInForm(this.formRef?.current),
+          reduxForm?.formValues,
+        ])}
+        {/* {(React.Children.toArray(children) as ReactElement[]).map(child => {
           const isButton = child.type === 'button';
           return isButton
             ? child
@@ -174,7 +182,7 @@ class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
                     }
                   : this.fieldChanged,
               });
-        })}
+        })} */}
       </form>
     );
   }

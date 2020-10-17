@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import {
   FormValues,
   IValidatedFormState,
@@ -8,6 +8,7 @@ import {
   getFieldsInForm,
   isFieldValidatable,
   getUpdatedFormValue,
+  attachProps,
 } from './shared';
 
 type ValidatedFormProps = Omit<IValidatedFormProps, 'onSubmit'>;
@@ -148,23 +149,11 @@ export default class ValidatedForm extends React.Component<
           submissionAttempted ? 'validated-form-submission-attempted ' : ''
         }${formIsValid ? '' : formErrorClass}${className ?? ''}`}
       >
-        {(React.Children.toArray(children) as ReactElement[]).map(child => {
-          const isButton = child.type === 'button';
-          return isButton
-            ? child
-            : React.cloneElement(child, {
-                ...child.props,
-                value:
-                  // child.props.value ??
-                  this.state.formValues[child.props.name]?.value ?? '',
-                onChange: child.props.onChange
-                  ? e => {
-                      this.fieldChanged(e);
-                      child.props.onChange(e);
-                    }
-                  : this.fieldChanged,
-              });
-        })}
+        {attachProps.apply(this, [
+          children,
+          getFieldsInForm(this.formRef?.current),
+          this.state.formValues,
+        ])}
       </form>
     );
   }
