@@ -8,7 +8,7 @@ import {
   getFieldsInForm,
   isFieldValidatable,
   getUpdatedFormValue,
-  attachProps,
+  addListeners,
 } from './shared';
 
 type ValidatedFormProps = Omit<IValidatedFormProps, 'onSubmit'>;
@@ -31,7 +31,9 @@ export default class ValidatedForm extends React.Component<
 
   componentDidMount() {
     // Check to make sure all fields have a 'name'
-    getFieldsInForm(this.formRef?.current).forEach(field => {
+    this.formFields = getFieldsInForm(this.formRef?.current);
+    addListeners.apply(this, [this.formFields]);
+    this.formFields.forEach(field => {
       if (field.name) {
         if (
           this.props.customValidators[field.name]?.isValid &&
@@ -54,7 +56,14 @@ export default class ValidatedForm extends React.Component<
     this.resetForm();
   }
 
+  componentDidUpdate() {
+    const currentFormFields = getFieldsInForm(this.formRef?.current);
+    // Browser doesn't add duplicate listeners if the same listener is already there
+    addListeners.apply(this, [currentFormFields]);
+  }
+
   formRef: React.RefObject<HTMLFormElement> = React.createRef();
+  formFields: HTMLFormElement[] = [];
 
   onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -149,11 +158,7 @@ export default class ValidatedForm extends React.Component<
           submissionAttempted ? 'validated-form-submission-attempted ' : ''
         }${formIsValid ? '' : formErrorClass}${className ?? ''}`}
       >
-        {attachProps.apply(this, [
-          children,
-          getFieldsInForm(this.formRef?.current),
-          this.state.formValues,
-        ])}
+        {children}
       </form>
     );
   }

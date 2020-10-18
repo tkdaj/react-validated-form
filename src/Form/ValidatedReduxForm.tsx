@@ -11,7 +11,7 @@ import {
   getFieldsInForm,
   isFieldValidatable,
   getUpdatedFormValue,
-  attachProps,
+  addListeners,
 } from './shared';
 
 const mapState = (state: IApplicationState) => ({
@@ -38,7 +38,9 @@ export class ValidatedReduxForm extends React.Component<
   componentDidMount() {
     // Check to make sure all fields have a 'name'
     const initialFieldValues: FormValues = {};
-    getFieldsInForm(this.formRef?.current).forEach(field => {
+    this.formFields = getFieldsInForm(this.formRef?.current);
+    addListeners.apply(this, [this.formFields]);
+    this.formFields.forEach(field => {
       if (field.name) {
         // If there is custom validation it requires custom errorText
         if (
@@ -52,7 +54,7 @@ export class ValidatedReduxForm extends React.Component<
         }
         initialFieldValues[field.name] = getUpdatedFormValue(
           field,
-          this.props,
+          this.props as IValidatedFormProps,
           true
         );
       } else if (isFieldValidatable(field)) {
@@ -72,7 +74,14 @@ export class ValidatedReduxForm extends React.Component<
     });
   }
 
+  componentDidUpdate() {
+    const currentFormFields = getFieldsInForm(this.formRef?.current);
+    // Browser doesn't add duplicate listeners if the same listener is already there
+    addListeners.apply(this, [currentFormFields]);
+  }
+
   formRef: React.RefObject<HTMLFormElement> = React.createRef();
+  formFields: HTMLFormElement[] = [];
 
   onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -97,7 +106,10 @@ export class ValidatedReduxForm extends React.Component<
 
   fieldChanged = e => {
     const { target } = e;
-    const updatedField = getUpdatedFormValue(target, this.props);
+    const updatedField = getUpdatedFormValue(
+      target,
+      this.props as IValidatedFormProps
+    );
     const newForm = {
       ...this.props.reduxForms[this.props.name],
       formValues: {
@@ -118,7 +130,11 @@ export class ValidatedReduxForm extends React.Component<
   resetForm = () => {
     const formValues: FormValues = getFieldsInForm(this.formRef.current).reduce(
       (fields, curr: any) => {
-        const updatedField = getUpdatedFormValue(curr, this.props, true);
+        const updatedField = getUpdatedFormValue(
+          curr,
+          this.props as IValidatedFormProps,
+          true
+        );
         return {
           ...fields,
           [curr.name]: updatedField,
@@ -163,11 +179,7 @@ export class ValidatedReduxForm extends React.Component<
             : ''
         }${reduxForm?.formIsValid ? '' : formErrorClass}${className ?? ''}`}
       >
-        {attachProps.apply(this, [
-          children,
-          getFieldsInForm(this.formRef?.current),
-          reduxForm?.formValues,
-        ])}
+        {children}
       </form>
     );
   }

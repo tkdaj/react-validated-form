@@ -1,7 +1,6 @@
-import { ReactNode, Children, ReactElement, cloneElement } from 'react';
-import { FormValues } from './validatedFormModels';
 import { ValidatedReduxForm } from './ValidatedReduxForm';
 import ValidatedForm from './ValidatedForm';
+import { IValidatedFormProps } from './validatedFormModels';
 
 const nonValidatableTags = ['BUTTON'];
 
@@ -18,7 +17,7 @@ export const getFieldsInForm = (form: HTMLFormElement | null) => {
 
 export const getUpdatedFormValue = (
   el: HTMLFormElement,
-  props: any, // IValidatedFormProps,
+  props: IValidatedFormProps,
   init = false
 ) => {
   const isCheckbox = el.type === 'checkbox';
@@ -30,12 +29,10 @@ export const getUpdatedFormValue = (
     } else if (isCheckbox) {
       value = false;
     } else if (isRadio) {
-      value = '';
       el.checked = false;
     } else {
       value = '';
     }
-    // Manually setting value here so that "checkValidity() works correctly when resetting form
     el[isCheckbox ? 'checked' : 'value'] = value;
   }
   el.setCustomValidity('');
@@ -55,64 +52,11 @@ export const getUpdatedFormValue = (
   };
 };
 
-// export const flattenAllChildren = (
-//   startingChildren: ReactNode,
-//   childList: ReactElement[] = []
-// ) => {
-//   return (Children.toArray(startingChildren) as ReactElement[]).reduce(
-//     (acc, curr) => {
-//       if (curr.props?.children) {
-//         return flattenAllChildren(curr.props.children, [...acc, curr]);
-//       }
-//       if (isValidElement(curr)) {
-//         return [...acc, curr];
-//       }
-//       return acc;
-//     },
-//     childList
-//   );
-// };
-
-export function attachProps(
+export function addListeners(
   this: ValidatedForm | ValidatedReduxForm,
-  startingChildren: ReactNode,
-  formFields: HTMLFormElement[],
-  formValues: FormValues
+  formFields: HTMLFormElement[]
 ) {
-  return Children.map(startingChildren as ReactElement, child => {
-    if (!child || typeof child === 'string') return child;
-    const matchingField = formFields.find(item => {
-      console.log('FIND', item, child);
-      return child?.props?.name === item.name;
-    });
-    console.log('matching field', matchingField);
-    const children = child?.props?.children
-      ? attachProps.apply(this, [
-          child?.props?.children,
-          formFields,
-          formValues,
-        ])
-      : null;
-    console.log('child and children', child, children);
-    return cloneElement(
-      child,
-      {
-        ...child?.props,
-        ...(matchingField
-          ? { value: formValues[child?.props?.name]?.value ?? '' }
-          : null),
-        ...(matchingField
-          ? {
-              onChange: child?.props?.onChange
-                ? e => {
-                    this.fieldChanged(e);
-                    child?.props?.onChange(e);
-                  }
-                : this.fieldChanged,
-            }
-          : null),
-      },
-      children
-    );
+  formFields.forEach(el => {
+    el.addEventListener('input', this.fieldChanged);
   });
 }

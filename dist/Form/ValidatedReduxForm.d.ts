@@ -11,7 +11,9 @@ export declare class ValidatedReduxForm extends React.Component<OwnProps & Props
         formErrorClass: string;
     };
     componentDidMount(): void;
+    componentDidUpdate(): void;
     formRef: React.RefObject<HTMLFormElement>;
+    formFields: HTMLFormElement[];
     onFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     fieldChanged: (e: any) => void;
     resetForm: () => void;
