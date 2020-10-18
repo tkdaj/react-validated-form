@@ -12,6 +12,11 @@ const mapState = (state: IApplicationState) => ({
 
 type DemoProps = ReturnType<typeof mapState>;
 
+// TODO: Add logic for initial values and proper initial error states
+// What happens when user handles their own state and events?
+// fix duplicate code -- use composition
+// fix typescript in build
+
 const Demo: FC<DemoProps> = ({ reduxForms }) => {
   const reduxFormRef = useRef<typeof ValidatedReduxForm>(null);
   const standardFormRef = useRef<ValidatedForm>(null);
