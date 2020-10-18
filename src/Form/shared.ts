@@ -79,11 +79,21 @@ export function attachProps(
   formFields: HTMLFormElement[],
   formValues: FormValues
 ) {
-  return Children.map((startingChildren || []) as ReactElement, child => {
-    if (typeof child === 'string') return child;
+  return Children.map(startingChildren as ReactElement, child => {
+    if (!child || typeof child === 'string') return child;
     const matchingField = formFields.find(item => {
+      console.log('FIND', item, child);
       return child?.props?.name === item.name;
     });
+    console.log('matching field', matchingField);
+    const children = child?.props?.children
+      ? attachProps.apply(this, [
+          child?.props?.children,
+          formFields,
+          formValues,
+        ])
+      : null;
+    console.log('child and children', child, children);
     return cloneElement(
       child,
       {
@@ -102,13 +112,7 @@ export function attachProps(
             }
           : null),
       },
-      child?.props?.children
-        ? attachProps.apply(this, [
-            child?.props?.children,
-            formFields,
-            formValues,
-          ])
-        : null
+      children
     );
   });
 }
