@@ -1,4 +1,4 @@
-import { FormHTMLAttributes } from 'react';
+import React, { FormHTMLAttributes } from 'react';
 export declare type FormValues = {
     [fieldName: string]: {
         value: any;

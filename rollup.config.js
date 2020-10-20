@@ -6,7 +6,6 @@ import json from '@rollup/plugin-json';
 import image from '@rollup/plugin-image';
 import replace from 'rollup-plugin-replace';
 import includePaths from 'rollup-plugin-includepaths';
-// import builtins from 'rollup-plugin-node-builtins';
 import globals from 'rollup-plugin-node-globals';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import { terser } from 'rollup-plugin-terser';
@@ -53,7 +52,6 @@ export default {
       include: 'node_modules/**',
     }),
     globals(),
-    // builtins(),
     json(),
     postcss({
       extract: false,
