@@ -40,10 +40,14 @@ it has it's own onSubmit function, and after validating the data, it will either
 
 All regular attributes which can be applied to a form works here too except for onSubmit
 
-`name`: required for the form as well as ALL validatable fields <br />
-`formErrorClass`: `optional` Specific error class to be applied to the entire form <br />
-`onInvalidSubmissionAttempt`: If the form is submitted, but is invalid, this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors. <br />
-`onValidSubmissionAttempt`: If the form is submitted and is valid this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors. <br />
+`name`: required for the form as well as ALL validatable fields
+<br /><br />
+`onInvalidSubmissionAttempt`: If the form is submitted, but is invalid, this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
+<br /><br />
+`onValidSubmissionAttempt`: If the form is submitted and is valid this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
+<br /><br />
+`formErrorClass`: `optional` Specific error class to be applied to the entire form
+<br /><br />
 `customValidators`: `optional` An object which can contain custom error messages or validation logic within an `isValid` function. It should be shaped like this: <br />
 
 ```typescript
@@ -105,7 +109,7 @@ set this up other than using the component is:
 
 ```typescript
 import { validatedForms } from '@tkdaj/react-validated-form';
-// important! You must use the name 'validatedForms' when adding it to your store otherwise the ValidatedReduxForm component won't be able to update the proper values`
+// important! You must use the name 'validatedForms' when adding it to your store otherwise the ValidatedReduxForm component won't be able to update the proper values
 ```
 
 In the case of both redux and non-redux forms you should store the form field's values and set their onChange like normal.
