@@ -39,8 +39,7 @@ export default class ValidatedForm extends React.Component<
         }
         formValues[field.name] = getUpdatedFormValue(
           field,
-          this.props as IValidatedFormProps,
-          true
+          this.props as IValidatedFormProps
         );
         // If there is custom validation it requires custom errorText
       } else if (isFieldValidatable(field)) {

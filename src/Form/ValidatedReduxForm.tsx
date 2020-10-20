@@ -46,8 +46,7 @@ export class ValidatedReduxForm extends React.Component<
         }
         formValues[field.name] = getUpdatedFormValue(
           field,
-          this.props as IValidatedFormProps,
-          true
+          this.props as IValidatedFormProps
         );
       } else if (isFieldValidatable(field)) {
         console.error(
