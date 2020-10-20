@@ -40,11 +40,11 @@ it has it's own onSubmit function, and after validating the data, it will either
 
 All regular attributes which can be applied to a form works here too except for onSubmit
 
-`name`: required for the form as well as ALL validatable fields
-`formErrorClass`: `optional` Specific error class to be applied to the entire form
-`onInvalidSubmissionAttempt`: If the form is submitted, but is invalid, this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
-`onValidSubmissionAttempt`: If the form is submitted and is valid this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
-`customValidators`: `optional` An object which can contain custom error messages or validation logic within an `isValid` function. It should be shaped like this:
+`name`: required for the form as well as ALL validatable fields <br />
+`formErrorClass`: `optional` Specific error class to be applied to the entire form <br />
+`onInvalidSubmissionAttempt`: If the form is submitted, but is invalid, this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors. <br />
+`onValidSubmissionAttempt`: If the form is submitted and is valid this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors. <br />
+`customValidators`: `optional` An object which can contain custom error messages or validation logic within an `isValid` function. It should be shaped like this: <br />
 
 ```typescript
 customValidators: {
@@ -103,8 +103,10 @@ If you want to get data from a form it will be `validatedForms.myFormName` where
 is the name of one of your `ValidatedReduxForm`s. The only boilerplate you need to do to
 set this up other than using the component is:
 
-`import { validatedForms } from '@tkdaj/react-validated-form';`
-`// important! You must use the name 'validatedForms' when adding it to your store otherwise the ValidatedReduxForm component won't be able to update the proper values`
+```typescript
+import { validatedForms } from '@tkdaj/react-validated-form';
+// important! You must use the name 'validatedForms' when adding it to your store otherwise the ValidatedReduxForm component won't be able to update the proper values`
+```
 
 In the case of both redux and non-redux forms you should store the form field's values and set their onChange like normal.
 See src/Demo/ReduxFormDemo.tsx or src/Demo/StandardFormDemo.tsx for more information.
