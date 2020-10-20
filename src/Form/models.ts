@@ -1,4 +1,4 @@
-import { FormHTMLAttributes } from "react";
+import React, { FormHTMLAttributes } from 'react';
 
 export type FormValues = {
   [fieldName: string]: {
@@ -25,9 +25,6 @@ export interface IValidatedFormProps
     e: React.FormEvent<HTMLFormElement>,
     formValues: FormValues
   ) => void;
-  initialFieldValues: {
-    [fieldName: string]: string | number | boolean;
-  };
   customValidators: {
     [fieldName: string]: {
       isValid?: IsValidFunction;

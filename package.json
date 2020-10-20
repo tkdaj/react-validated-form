@@ -1,6 +1,6 @@
 {
   "name": "@tkdaj/react-validated-form",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "description": "A self-validating React form component",
   "author": "tkdaj",
   "repository": {

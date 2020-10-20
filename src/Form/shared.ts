@@ -1,6 +1,6 @@
-import { ValidatedReduxForm } from './ValidatedReduxForm';
-import ValidatedForm from './ValidatedForm';
-import { IValidatedFormProps } from './validatedFormModels';
+// import { ValidatedReduxForm } from './ValidatedReduxForm';
+// import ValidatedForm from './ValidatedForm';
+import { IValidatedFormProps } from './models';
 
 const nonValidatableTags = ['BUTTON'];
 
@@ -22,17 +22,24 @@ export const getUpdatedFormValue = (
 ) => {
   const isCheckbox = el.type === 'checkbox';
   const isRadio = el.type === 'radio';
-  let value = isCheckbox ? el.checked : el.value;
+  let { value } = el;
+  if (isCheckbox) {
+    value = el.checked;
+  }
+  if (isRadio) {
+    // check to see if another radio with the same name was already considered checked?
+    value = el.checked ? el.value : '';
+  }
   if (init) {
-    if (props.initialFieldValues[el.name]) {
-      value = props.initialFieldValues[el.name];
-    } else if (isCheckbox) {
+    if (isCheckbox) {
       value = false;
     } else if (isRadio) {
       el.checked = false;
+      value = '';
     } else {
       value = '';
     }
+    // Manually setting value here so that "checkValidity() works correctly when resetting form
     el[isCheckbox ? 'checked' : 'value'] = value;
   }
   el.setCustomValidity('');
@@ -51,12 +58,3 @@ export const getUpdatedFormValue = (
     error: valid ? '' : error,
   };
 };
-
-export function addListeners(
-  this: ValidatedForm | ValidatedReduxForm,
-  formFields: HTMLFormElement[]
-) {
-  formFields.forEach(el => {
-    el.addEventListener('input', this.fieldChanged);
-  });
-}

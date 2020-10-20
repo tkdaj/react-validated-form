@@ -1,4 +1,4 @@
-import { IValidatedFormState } from './validatedFormModels';
+import { IValidatedFormState } from './models';
 import { ValidatedFormAction } from './validatedForm.actions';
 export interface IValidatedForms {
     [formName: string]: IValidatedFormState;

@@ -1,17 +1,12 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { IApplicationState } from 'store';
-import {
-  IValidatedFormState,
-  IValidatedFormProps,
-  FormValues,
-} from './validatedFormModels';
+import { IValidatedFormState, IValidatedFormProps, FormValues } from './models';
 import { updateValidatedForm } from './validatedForm.actions';
 import {
   getFieldsInForm,
   isFieldValidatable,
   getUpdatedFormValue,
-  addListeners,
 } from './shared';
 
 const mapState = (state: IApplicationState) => ({
@@ -31,16 +26,13 @@ export class ValidatedReduxForm extends React.Component<
 > {
   static defaultProps = {
     customValidators: {},
-    initialFieldValues: {},
     formErrorClass: 'validated-form-error',
   };
 
   componentDidMount() {
     // Check to make sure all fields have a 'name'
-    const initialFieldValues: FormValues = {};
-    this.formFields = getFieldsInForm(this.formRef?.current);
-    addListeners.apply(this, [this.formFields]);
-    this.formFields.forEach(field => {
+    const formValues: FormValues = {};
+    getFieldsInForm(this.formRef?.current).forEach(field => {
       if (field.name) {
         // If there is custom validation it requires custom errorText
         if (
@@ -52,7 +44,7 @@ export class ValidatedReduxForm extends React.Component<
             field
           );
         }
-        initialFieldValues[field.name] = getUpdatedFormValue(
+        formValues[field.name] = getUpdatedFormValue(
           field,
           this.props as IValidatedFormProps,
           true
@@ -68,20 +60,59 @@ export class ValidatedReduxForm extends React.Component<
       formName: this.props.name,
       newFormState: {
         submissionAttempted: false,
-        formIsValid: !Object.values(initialFieldValues).find(val => val.error),
-        formValues: initialFieldValues,
+        formIsValid: !Object.values(formValues).find(val => val.error),
+        formValues,
       },
     });
   }
 
   componentDidUpdate() {
-    const currentFormFields = getFieldsInForm(this.formRef?.current);
-    // Browser doesn't add duplicate listeners if the same listener is already there
-    addListeners.apply(this, [currentFormFields]);
+    const theForm: IValidatedFormState = this.props.reduxForms[this.props.name];
+    const newOrChangedFields = getFieldsInForm(this.formRef.current).reduce(
+      (acc, curr) => {
+        const { formValues: fields } = theForm;
+        if (fields[curr.name]) {
+          const isCheckbox = curr.type === 'checkbox';
+          const isRadio = curr.type === 'radio';
+          if (
+            (isRadio &&
+              curr.checked &&
+              fields[curr.name].value !== curr.value) ||
+            (isCheckbox && fields[curr.name].value !== curr.checked) ||
+            (!isRadio && !isCheckbox && fields[curr.name].value !== curr.value)
+          ) {
+            acc[curr.name] = getUpdatedFormValue(
+              curr,
+              this.props as IValidatedFormProps
+            );
+          }
+        } else {
+          acc[curr.name] = getUpdatedFormValue(
+            curr,
+            this.props as IValidatedFormProps
+          );
+        }
+        return acc;
+      },
+      {}
+    );
+    if (Object.keys(newOrChangedFields).length) {
+      const formValues: FormValues = {
+        ...theForm.formValues,
+        ...newOrChangedFields,
+      };
+      this.props.updateValidatedForm({
+        formName: this.props.name,
+        newFormState: {
+          ...theForm,
+          formValues,
+          formIsValid: !Object.values(formValues).find(val => val.error),
+        },
+      });
+    }
   }
 
   formRef: React.RefObject<HTMLFormElement> = React.createRef();
-  formFields: HTMLFormElement[] = [];
 
   onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -104,54 +135,6 @@ export class ValidatedReduxForm extends React.Component<
     }
   };
 
-  fieldChanged = e => {
-    const { target } = e;
-    const updatedField = getUpdatedFormValue(
-      target,
-      this.props as IValidatedFormProps
-    );
-    const newForm = {
-      ...this.props.reduxForms[this.props.name],
-      formValues: {
-        ...this.props.reduxForms[this.props.name].formValues,
-        [target.name]: updatedField,
-      },
-    } as IValidatedFormState;
-    this.props.updateValidatedForm({
-      formName: this.props.name,
-      newFormState: {
-        ...newForm,
-        formIsValid: !Object.values(newForm.formValues).find(val => val.error),
-      },
-    });
-  };
-
-  // This function is available at any time using a ref from outside this component
-  resetForm = () => {
-    const formValues: FormValues = getFieldsInForm(this.formRef.current).reduce(
-      (fields, curr: any) => {
-        const updatedField = getUpdatedFormValue(
-          curr,
-          this.props as IValidatedFormProps,
-          true
-        );
-        return {
-          ...fields,
-          [curr.name]: updatedField,
-        };
-      },
-      {}
-    );
-    this.props.updateValidatedForm({
-      newFormState: {
-        submissionAttempted: false,
-        formValues,
-        formIsValid: !Object.values(formValues).find(val => val.error),
-      },
-      formName: this.props.name,
-    });
-  };
-
   render() {
     const {
       onInvalidSubmissionAttempt: onInvalidForm,
@@ -160,7 +143,6 @@ export class ValidatedReduxForm extends React.Component<
       customValidators,
       className,
       children,
-      initialFieldValues,
       reduxForms,
       name,
       formErrorClass,
@@ -168,16 +150,24 @@ export class ValidatedReduxForm extends React.Component<
     } = this.props;
     const reduxForm = reduxForms[name];
 
+    const classObj = {
+      'validated-form': true,
+      'validated-form-submission-attempted': Boolean(
+        reduxForm?.submissionAttempted
+      ),
+      [formErrorClass]: !reduxForm?.formIsValid,
+      [className]: Boolean(className),
+    };
+    const classes = Object.keys(classObj)
+      .filter(key => classObj[key])
+      .join(' ');
+
     return (
       <form
+        {...props}
         ref={this.formRef}
         onSubmit={this.onFormSubmit}
-        {...props}
-        className={`validated-form ${
-          reduxForm?.submissionAttempted
-            ? 'validated-form-submission-attempted '
-            : ''
-        }${reduxForm?.formIsValid ? '' : formErrorClass}${className ?? ''}`}
+        className={classes}
       >
         {children}
       </form>

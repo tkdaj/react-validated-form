@@ -42,9 +42,8 @@ All regular attributes which can be applied to a form works here too except for 
 
 `name`: required for the form as well as ALL validatable fields
 `formErrorClass`: `optional` Specific error class to be applied to the entire form
-`onInvalidSubmissionAttempt`: If the form is submitted, but is invalid, this funcion will be called. Two parameters are passed - the submit event object and the formValues.
-`onValidSubmissionAttempt`: If the form is submitted and is valid this funcion will be called. Two parameters are passed - the submit event object and the formValues.
-`initialFieldValues`: `optional` An object containing the initial values you wish to set the fields to. Use the field name as the key, and the initial field value and the value within the object.
+`onInvalidSubmissionAttempt`: If the form is submitted, but is invalid, this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
+`onValidSubmissionAttempt`: If the form is submitted and is valid this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
 `customValidators`: `optional` An object which can contain custom error messages or validation logic within an `isValid` function. It should be shaped like this:
 
 ```typescript
@@ -80,10 +79,11 @@ export type FormValues = {
 ## Using Without Redux
 
 To use the standard `ValidatedForm` without redux, you use it in place of a normal `<form>` tag.
-There are two methods specifically added to `ValidatedForm` which are meant to be accessed from
+Since the non-redux form does not have access to a global store to store the validated data in,
+there is a method specifically added to `ValidatedForm` which is meant to be accessed from
 outside the form:
-`getFormData` and `resetForm`
-In order to access these, create a ref object using `React.createRef()` or the `useRef(null)` hook.
+`getFormData`
+In order to access this, create a ref object using `React.createRef()` or the `useRef(null)` hook.
 Then, add the created ref to your `ValidatedForm` like:
 
 ```typescript
@@ -91,14 +91,13 @@ import { ValidatedForm } from '@tkdaj/react-validated-form';
 <ValidatedForm name="myForm" ref={this.myFormRef} />;
 ```
 
-Once you have done that you can access the functions using the ref. For example:
-`this.myFormRef.current.getFormData()` or `this.myFormRef.current.resetForm()`
+Once you have done that you can access the function using the ref. For example:
+`this.myFormRef.current.getFormData()`
 
 ## Using With Redux
 
 Since all of the form data is stored inside redux with this component, there is no publicly
 accessible `getFormData` function as shown in the "Using Without Redux" section above.
-There is still a public `resetForm` function, though -- see above section for use.
 For simplicity, all forms are stored inside redux under the name: validatedForms.
 If you want to get data from a form it will be `validatedForms.myFormName` where `myFormName`
 is the name of one of your `ValidatedReduxForm`s. The only boilerplate you need to do to
@@ -106,3 +105,6 @@ set this up other than using the component is:
 
 `import { validatedForms } from '@tkdaj/react-validated-form';`
 `// important! You must use the name 'validatedForms' when adding it to your store otherwise the ValidatedReduxForm component won't be able to update the proper values`
+
+In the case of both redux and non-redux forms you should store the form field's values and set their onChange like normal.
+See src/Demo/ReduxFormDemo.tsx or src/Demo/StandardFormDemo.tsx for more information.

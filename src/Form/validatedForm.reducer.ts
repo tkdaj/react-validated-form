@@ -1,4 +1,4 @@
-import { IValidatedFormState } from './validatedFormModels';
+import { IValidatedFormState } from './models';
 import {
   INIT_VALIDATED_FORM,
   CLEAR_VALIDATED_FORM,

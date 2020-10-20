@@ -1,4 +1,4 @@
-import { FormHTMLAttributes } from "react";
+import { FormHTMLAttributes } from 'react';
 export declare type FormValues = {
     [fieldName: string]: {
         value: any;
@@ -14,9 +14,6 @@ export declare type IsValidFunction = (val: any) => boolean;
 export interface IValidatedFormProps extends FormHTMLAttributes<HTMLFormElement> {
     onInvalidSubmissionAttempt?: (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => void;
     onValidSubmissionAttempt?: (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => void;
-    initialFieldValues: {
-        [fieldName: string]: string | number | boolean;
-    };
     customValidators: {
         [fieldName: string]: {
             isValid?: IsValidFunction;
@@ -27,4 +24,4 @@ export interface IValidatedFormProps extends FormHTMLAttributes<HTMLFormElement>
     formErrorClass?: string;
     onFormChanged?: (updatedField: HTMLFormElement, updatedFormState: IValidatedFormState) => void;
 }
-//# sourceMappingURL=validatedFormModels.d.ts.map
+//# sourceMappingURL=models.d.ts.map

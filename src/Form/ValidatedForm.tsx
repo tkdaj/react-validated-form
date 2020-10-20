@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  FormValues,
-  IValidatedFormState,
-  IValidatedFormProps,
-} from './validatedFormModels';
+import { FormValues, IValidatedFormState, IValidatedFormProps } from './models';
 import {
   getFieldsInForm,
   isFieldValidatable,
   getUpdatedFormValue,
-  addListeners,
 } from './shared';
 
 type ValidatedFormProps = Omit<IValidatedFormProps, 'onSubmit'>;
@@ -19,7 +14,6 @@ export default class ValidatedForm extends React.Component<
 > {
   static defaultProps = {
     customValidators: {},
-    initialFieldValues: {},
     formErrorClass: 'validated-form-error',
   };
 
@@ -30,10 +24,9 @@ export default class ValidatedForm extends React.Component<
   };
 
   componentDidMount() {
+    const formValues: FormValues = {};
     // Check to make sure all fields have a 'name'
-    this.formFields = getFieldsInForm(this.formRef?.current);
-    addListeners.apply(this, [this.formFields]);
-    this.formFields.forEach(field => {
+    getFieldsInForm(this.formRef?.current).forEach(field => {
       if (field.name) {
         if (
           this.props.customValidators[field.name]?.isValid &&
@@ -44,6 +37,11 @@ export default class ValidatedForm extends React.Component<
             field
           );
         }
+        formValues[field.name] = getUpdatedFormValue(
+          field,
+          this.props as IValidatedFormProps,
+          true
+        );
         // If there is custom validation it requires custom errorText
       } else if (isFieldValidatable(field)) {
         console.error(
@@ -53,17 +51,70 @@ export default class ValidatedForm extends React.Component<
       }
     });
     // Initialize the form
-    this.resetForm();
+    this.setState(
+      {
+        submissionAttempted: false,
+        formValues,
+        formIsValid: !Object.values(formValues).find(val => val.error),
+      },
+      () => {
+        this.props.onFormChanged?.(
+          this.formRef.current as HTMLFormElement,
+          this.state
+        );
+      }
+    );
   }
 
   componentDidUpdate() {
-    const currentFormFields = getFieldsInForm(this.formRef?.current);
-    // Browser doesn't add duplicate listeners if the same listener is already there
-    addListeners.apply(this, [currentFormFields]);
+    const newOrChangedFields = getFieldsInForm(this.formRef.current).reduce(
+      (acc, curr) => {
+        if (this.state.formValues[curr.name]) {
+          const isCheckbox = curr.type === 'checkbox';
+          const isRadio = curr.type === 'radio';
+          if (
+            (isRadio &&
+              curr.checked &&
+              this.state.formValues[curr.name].value !== curr.value) ||
+            (isCheckbox &&
+              this.state.formValues[curr.name].value !== curr.checked) ||
+            (!isRadio &&
+              !isCheckbox &&
+              this.state.formValues[curr.name].value !== curr.value)
+          ) {
+            acc[curr.name] = getUpdatedFormValue(curr, this.props);
+          }
+        } else {
+          acc[curr.name] = getUpdatedFormValue(curr, this.props);
+        }
+        return acc;
+      },
+      {}
+    );
+    if (Object.keys(newOrChangedFields).length) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState(
+        state => {
+          const formValues: FormValues = {
+            ...state.formValues,
+            ...newOrChangedFields,
+          };
+          return {
+            formValues,
+            formIsValid: !Object.values(formValues).find(val => val.error),
+          };
+        },
+        () => {
+          this.props.onFormChanged?.(
+            this.formRef.current as HTMLFormElement,
+            this.state
+          );
+        }
+      );
+    }
   }
 
   formRef: React.RefObject<HTMLFormElement> = React.createRef();
-  formFields: HTMLFormElement[] = [];
 
   onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,24 +133,6 @@ export default class ValidatedForm extends React.Component<
     });
   };
 
-  fieldChanged = e => {
-    const { target } = e;
-    const updatedField = getUpdatedFormValue(target, this.props);
-    this.setState(state => {
-      const newFormValues: FormValues = {
-        ...state.formValues,
-        [target.name]: updatedField,
-      };
-      const newState = {
-        ...state,
-        formValues: newFormValues,
-        formIsValid: !Object.values(newFormValues).find(val => val.error),
-      };
-      this.props.onFormChanged?.(target, newState);
-      return newState;
-    });
-  };
-
   // This function makes the form data available at any time using a ref from outside this component
   getFormData = () => ({
     ...this.state,
@@ -111,31 +144,6 @@ export default class ValidatedForm extends React.Component<
     }, {}),
   });
 
-  // This function is available at any time using a ref from outside this component
-  resetForm = () => {
-    const formValues: FormValues = getFieldsInForm(this.formRef.current).reduce(
-      (fields, curr: any) => {
-        const updatedField = getUpdatedFormValue(curr, this.props, true);
-        return {
-          ...fields,
-          [curr.name]: updatedField,
-        };
-      },
-      {}
-    );
-    const newState = {
-      submissionAttempted: false,
-      formValues,
-      formIsValid: !Object.values(formValues).find(val => val.error),
-    };
-    this.setState(newState, () =>
-      this.props.onFormChanged?.(
-        this.formRef.current as HTMLFormElement,
-        this.state
-      )
-    );
-  };
-
   render() {
     const {
       onInvalidSubmissionAttempt: onInvalidForm,
@@ -143,20 +151,28 @@ export default class ValidatedForm extends React.Component<
       customValidators,
       className,
       children,
-      initialFieldValues,
       formErrorClass,
-      onFormChanged: onFieldChanged,
+      onFormChanged,
       ...props
     } = this.props;
     const { submissionAttempted, formIsValid } = this.state;
+
+    const classObj = {
+      'validated-form': true,
+      'validated-form-submission-attempted': Boolean(submissionAttempted),
+      [formErrorClass as string]: !formIsValid,
+      [className as string]: Boolean(className),
+    };
+    const classes = Object.keys(classObj)
+      .filter(key => classObj[key])
+      .join(' ');
+
     return (
       <form
+        {...props}
         ref={this.formRef}
         onSubmit={this.onFormSubmit}
-        {...props}
-        className={`validated-form ${
-          submissionAttempted ? 'validated-form-submission-attempted ' : ''
-        }${formIsValid ? '' : formErrorClass}${className ?? ''}`}
+        className={classes}
       >
         {children}
       </form>
