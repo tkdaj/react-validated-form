@@ -10,7 +10,7 @@ export type IValidatedForm = Omit<IValidatedFormProps, 'onSubmit'>;
 
 export default class ValidatedForm extends React.Component<
   IValidatedForm,
-  IValidatedFormState
+  { validationData: IValidatedFormState }
 > {
   static defaultProps = {
     customValidators: {},
@@ -18,9 +18,11 @@ export default class ValidatedForm extends React.Component<
   };
 
   state = {
-    submissionAttempted: false,
-    formIsValid: false,
-    formValues: {},
+    validationData: {
+      submissionAttempted: false,
+      formIsValid: false,
+      formValues: {},
+    },
   };
 
   componentDidMount() {
@@ -52,61 +54,75 @@ export default class ValidatedForm extends React.Component<
     // Initialize the form
     this.setState(
       {
-        submissionAttempted: false,
-        formValues,
-        formIsValid: !Object.values(formValues).find(val => val.error),
+        validationData: {
+          submissionAttempted: false,
+          formValues,
+          formIsValid: !Object.values(formValues).find(val => val.error),
+        },
       },
       () => {
         this.props.onFormChanged?.(
           this.formRef.current as HTMLFormElement,
-          this.state
+          this.state.validationData
         );
       }
     );
   }
 
   componentDidUpdate() {
-    const newOrChangedFields = getFieldsInForm(this.formRef.current).reduce(
-      (acc, curr) => {
-        if (this.state.formValues[curr.name]) {
-          const isCheckbox = curr.type === 'checkbox';
-          const isRadio = curr.type === 'radio';
-          if (
-            (isRadio &&
-              curr.checked &&
-              this.state.formValues[curr.name].value !== curr.value) ||
-            (isCheckbox &&
-              this.state.formValues[curr.name].value !== curr.checked) ||
-            (!isRadio &&
-              !isCheckbox &&
-              this.state.formValues[curr.name].value !== curr.value)
-          ) {
-            acc[curr.name] = getUpdatedFormValue(curr, this.props);
-          }
-        } else {
+    const currentFields = getFieldsInForm(this.formRef.current);
+    const newOrChangedFields = currentFields.reduce((acc, curr) => {
+      // existing field
+      if (this.state.validationData.formValues[curr.name]) {
+        const isCheckbox = curr.type === 'checkbox';
+        const isRadio = curr.type === 'radio';
+        if (
+          (isRadio &&
+            curr.checked &&
+            this.state.validationData.formValues[curr.name].value !==
+              curr.value) ||
+          (isCheckbox &&
+            this.state.validationData.formValues[curr.name].value !==
+              curr.checked) ||
+          (!isRadio &&
+            !isCheckbox &&
+            this.state.validationData.formValues[curr.name].value !==
+              curr.value)
+        ) {
           acc[curr.name] = getUpdatedFormValue(curr, this.props);
         }
-        return acc;
-      },
-      {}
-    );
-    if (Object.keys(newOrChangedFields).length) {
+        // new field
+      } else {
+        acc[curr.name] = getUpdatedFormValue(curr, this.props);
+      }
+      return acc;
+    }, {});
+
+    const removedFields = Object.keys(
+      this.state.validationData.formValues
+    ).filter(name => !currentFields.find(field => field.name === name));
+
+    if (Object.keys(newOrChangedFields).length || removedFields.length) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState(
         state => {
           const formValues: FormValues = {
-            ...state.formValues,
+            ...state.validationData.formValues,
             ...newOrChangedFields,
           };
+          removedFields.forEach(name => delete formValues[name]);
           return {
-            formValues,
-            formIsValid: !Object.values(formValues).find(val => val.error),
+            validationData: {
+              ...state.validationData,
+              formValues,
+              formIsValid: !Object.values(formValues).find(val => val.error),
+            },
           };
         },
         () => {
           this.props.onFormChanged?.(
             this.formRef.current as HTMLFormElement,
-            this.state
+            this.state.validationData
           );
         }
       );
@@ -117,19 +133,26 @@ export default class ValidatedForm extends React.Component<
 
   onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.setState({ submissionAttempted: true }, () => {
-      if (this.state.formIsValid) {
-        this.props?.onValidSubmissionAttempt?.(e, { ...this.state.formValues });
-      } else {
-        this.props?.onInvalidSubmissionAttempt?.(e, {
-          ...this.state.formValues,
-        });
+    this.setState(
+      state => ({
+        validationData: { ...state.validationData, submissionAttempted: true },
+      }),
+      () => {
+        if (this.state.validationData.formIsValid) {
+          this.props?.onValidSubmissionAttempt?.(e, {
+            ...this.state.validationData.formValues,
+          });
+        } else {
+          this.props?.onInvalidSubmissionAttempt?.(e, {
+            ...this.state.validationData.formValues,
+          });
+        }
+        this.props.onFormChanged?.(
+          this.formRef?.current as HTMLFormElement,
+          this.state.validationData
+        );
       }
-      this.props.onFormChanged?.(
-        this.formRef?.current as HTMLFormElement,
-        this.state
-      );
-    });
+    );
   };
 
   // This function makes the form data available at any time using a ref from outside this component
@@ -146,7 +169,7 @@ export default class ValidatedForm extends React.Component<
       onFormChanged,
       ...props
     } = this.props;
-    const { submissionAttempted, formIsValid } = this.state;
+    const { submissionAttempted, formIsValid } = this.state.validationData;
 
     const classObj = {
       'validated-form': true,

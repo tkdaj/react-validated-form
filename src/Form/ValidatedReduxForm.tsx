@@ -70,39 +70,41 @@ export class ValidatedReduxForm extends React.Component<
 
   componentDidUpdate() {
     const theForm: IValidatedFormState = this.props.reduxForms[this.props.name];
-    const newOrChangedFields = getFieldsInForm(this.formRef.current).reduce(
-      (acc, curr) => {
-        const { formValues: fields } = theForm;
-        if (fields[curr.name]) {
-          const isCheckbox = curr.type === 'checkbox';
-          const isRadio = curr.type === 'radio';
-          if (
-            (isRadio &&
-              curr.checked &&
-              fields[curr.name].value !== curr.value) ||
-            (isCheckbox && fields[curr.name].value !== curr.checked) ||
-            (!isRadio && !isCheckbox && fields[curr.name].value !== curr.value)
-          ) {
-            acc[curr.name] = getUpdatedFormValue(
-              curr,
-              this.props as IValidatedFormProps
-            );
-          }
-        } else {
+    const currentFields = getFieldsInForm(this.formRef.current);
+    const newOrChangedFields = currentFields.reduce((acc, curr) => {
+      const { formValues: fields } = theForm;
+      if (fields[curr.name]) {
+        const isCheckbox = curr.type === 'checkbox';
+        const isRadio = curr.type === 'radio';
+        if (
+          (isRadio && curr.checked && fields[curr.name].value !== curr.value) ||
+          (isCheckbox && fields[curr.name].value !== curr.checked) ||
+          (!isRadio && !isCheckbox && fields[curr.name].value !== curr.value)
+        ) {
           acc[curr.name] = getUpdatedFormValue(
             curr,
             this.props as IValidatedFormProps
           );
         }
-        return acc;
-      },
-      {}
+      } else {
+        acc[curr.name] = getUpdatedFormValue(
+          curr,
+          this.props as IValidatedFormProps
+        );
+      }
+      return acc;
+    }, {});
+
+    const removedFields = Object.keys(theForm.formValues).filter(
+      name => !currentFields.find(field => field.name === name)
     );
-    if (Object.keys(newOrChangedFields).length) {
+
+    if (Object.keys(newOrChangedFields).length || removedFields.length) {
       const formValues: FormValues = {
         ...theForm.formValues,
         ...newOrChangedFields,
       };
+      removedFields.forEach(name => delete formValues[name]);
       this.props.updateValidatedForm({
         formName: this.props.name,
         newFormState: {
