@@ -1,6 +1,6 @@
 {
   "name": "@tkdaj/react-validated-form",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "A self-validating React form component",
   "author": "tkdaj <tkdaj.packages@gmail.com>",
   "repository": {
@@ -13,6 +13,7 @@
   "license": "MIT",
   "keywords": [
     "validation",
+    "validate",
     "form",
     "redux",
     "react"
