@@ -154,8 +154,8 @@ export class ValidatedReduxForm extends React.Component<
       'validated-form-submission-attempted': Boolean(
         reduxForm?.submissionAttempted
       ),
-      [formErrorClass]: !reduxForm?.formIsValid,
-      [className]: Boolean(className),
+      [formErrorClass as string]: !reduxForm?.formIsValid,
+      [className as string]: Boolean(className),
     };
     const classes = Object.keys(classObj)
       .filter(key => classObj[key])

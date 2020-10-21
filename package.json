@@ -1,6 +1,6 @@
 {
   "name": "@tkdaj/react-validated-form",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "A self-validating React form component",
   "author": "tkdaj <tkdaj.packages@gmail.com>",
   "repository": {
@@ -55,6 +55,8 @@
     "@types/node": "^12.12.67",
     "@types/react": "^16.9.52",
     "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
+    "@types/redux": "^3.6.0",
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.0.1",
     "eslint-config-airbnb": "^18.2.0",

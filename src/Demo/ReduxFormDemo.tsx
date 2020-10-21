@@ -2,7 +2,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { IApplicationState } from 'store';
-import ValidatedReduxForm from '../Form/ValidatedReduxForm';
+import ValidatedReduxForm, {
+  ValidatedReduxForm as IValidatedReduxForm,
+} from '../Form/ValidatedReduxForm';
 import { getSharedFields } from './sharedFormFields';
 import './demo.scss';
 
@@ -22,12 +24,7 @@ const mapState = (state: IApplicationState) => ({
 
 type DemoProps = ReturnType<typeof mapState>;
 
-// TODO: Add logic for initial values and proper initial error states
-// What happens when user handles their own state and events?
-// fix duplicate code -- use composition
-// fix typescript in build
-
-class Demo extends React.Component<DemoProps, DemoState> {
+export class ReduxFormDemo extends React.Component<DemoProps, DemoState> {
   state: DemoState = {
     standardFormData: '',
     thecheckbox: true,
@@ -38,7 +35,7 @@ class Demo extends React.Component<DemoProps, DemoState> {
     theselect: '',
   };
 
-  reduxFormRef = React.createRef<typeof ValidatedReduxForm>();
+  reduxFormRef = React.createRef<IValidatedReduxForm>();
 
   render() {
     return (
@@ -65,7 +62,7 @@ class Demo extends React.Component<DemoProps, DemoState> {
               console.log(formData);
             }}
           >
-            {getSharedFields.call(this)}
+            {getSharedFields.call(this as any)}
           </ValidatedReduxForm>
         </div>
         <div className="redux-data">
@@ -78,4 +75,4 @@ class Demo extends React.Component<DemoProps, DemoState> {
   }
 }
 
-export default connect(mapState)(Demo);
+export default connect(mapState)(ReduxFormDemo);

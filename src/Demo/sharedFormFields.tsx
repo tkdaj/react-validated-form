@@ -1,10 +1,9 @@
 /* eslint-disable react/no-this-in-sfc */
 import React from 'react';
 import { TextField } from '@material-ui/core';
-import ReduxFormDemo from './ReduxFormDemo';
 import StandardFormDemo from './StandardFormDemo';
 
-export function getSharedFields(this: StandardFormDemo | typeof ReduxFormDemo) {
+export function getSharedFields(this: StandardFormDemo) {
   return (
     <>
       <input
