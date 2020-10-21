@@ -139,6 +139,17 @@ export class ValidatedReduxForm extends React.Component<
     }
   };
 
+  resetFormSubmitted = () => {
+    const updatedForm = {
+      ...this.props.reduxForms[this.props.name],
+      submissionAttempted: false,
+    };
+    this.props.updateValidatedForm({
+      formName: this.props.name,
+      newFormState: updatedForm,
+    });
+  };
+
   render() {
     const {
       onInvalidSubmissionAttempt: onInvalidForm,

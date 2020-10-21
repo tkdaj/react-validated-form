@@ -26,6 +26,7 @@ export default class ValidatedForm extends React.Component<IValidatedForm, {
             formValues: {};
         };
     };
+    resetFormSubmitted: () => void;
     render(): JSX.Element;
 }
 //# sourceMappingURL=ValidatedForm.d.ts.map
