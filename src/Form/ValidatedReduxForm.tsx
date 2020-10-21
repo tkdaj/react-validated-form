@@ -29,6 +29,7 @@ export class ValidatedReduxForm extends React.Component<
 > {
   static defaultProps = {
     customValidators: {},
+    hideNameErrors: false,
     formErrorClass: 'validated-form-error',
   };
 
@@ -51,7 +52,7 @@ export class ValidatedReduxForm extends React.Component<
           field,
           this.props as IValidatedFormProps
         );
-      } else if (isFieldValidatable(field)) {
+      } else if (isFieldValidatable(field) && !this.props.hideNameErrors) {
         console.error(
           'You must have a name on all form fields within ValidatedForm',
           field
@@ -72,31 +73,41 @@ export class ValidatedReduxForm extends React.Component<
     const theForm: IValidatedFormState = this.props.reduxForms[this.props.name];
     const currentFields = getFieldsInForm(this.formRef.current);
     const newOrChangedFields = currentFields.reduce((acc, curr) => {
-      const { formValues: fields } = theForm;
-      if (fields[curr.name]) {
-        const isCheckbox = curr.type === 'checkbox';
-        const isRadio = curr.type === 'radio';
-        if (
-          (isRadio && curr.checked && fields[curr.name].value !== curr.value) ||
-          (isCheckbox && fields[curr.name].value !== curr.checked) ||
-          (!isRadio && !isCheckbox && fields[curr.name].value !== curr.value)
-        ) {
+      if (curr.name) {
+        const { formValues: fields } = theForm;
+        if (fields[curr.name]) {
+          const isCheckbox = curr.type === 'checkbox';
+          const isRadio = curr.type === 'radio';
+          if (
+            (isRadio &&
+              curr.checked &&
+              fields[curr.name].value !== curr.value) ||
+            (isCheckbox && fields[curr.name].value !== curr.checked) ||
+            (!isRadio && !isCheckbox && fields[curr.name].value !== curr.value)
+          ) {
+            acc[curr.name] = getUpdatedFormValue(
+              curr,
+              this.props as IValidatedFormProps
+            );
+          }
+        } else {
           acc[curr.name] = getUpdatedFormValue(
             curr,
             this.props as IValidatedFormProps
           );
         }
-      } else {
-        acc[curr.name] = getUpdatedFormValue(
-          curr,
-          this.props as IValidatedFormProps
-        );
       }
       return acc;
     }, {});
 
     const removedFields = Object.keys(theForm.formValues).filter(
-      name => !currentFields.find(field => field.name === name)
+      name =>
+        !currentFields.find(field => {
+          if (field.name) {
+            return field.name === name;
+          }
+          return true;
+        })
     );
 
     if (Object.keys(newOrChangedFields).length || removedFields.length) {
@@ -161,6 +172,7 @@ export class ValidatedReduxForm extends React.Component<
       reduxForms,
       name,
       formErrorClass,
+      hideNameErrors,
       ...props
     } = this.props;
     const reduxForm = reduxForms[name];

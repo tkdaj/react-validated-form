@@ -14,6 +14,7 @@ export default class ValidatedForm extends React.Component<
 > {
   static defaultProps = {
     customValidators: {},
+    hideNameErrors: false,
     formErrorClass: 'validated-form-error',
   };
 
@@ -44,7 +45,7 @@ export default class ValidatedForm extends React.Component<
           this.props as IValidatedFormProps
         );
         // If there is custom validation it requires custom errorText
-      } else if (isFieldValidatable(field)) {
+      } else if (isFieldValidatable(field) && !this.props.hideNameErrors) {
         console.error(
           'You must have a name on all form fields within ValidatedForm',
           field
@@ -72,35 +73,45 @@ export default class ValidatedForm extends React.Component<
   componentDidUpdate() {
     const currentFields = getFieldsInForm(this.formRef.current);
     const newOrChangedFields = currentFields.reduce((acc, curr) => {
-      // existing field
-      if (this.state.validationData.formValues[curr.name]) {
-        const isCheckbox = curr.type === 'checkbox';
-        const isRadio = curr.type === 'radio';
-        if (
-          (isRadio &&
-            curr.checked &&
-            this.state.validationData.formValues[curr.name].value !==
-              curr.value) ||
-          (isCheckbox &&
-            this.state.validationData.formValues[curr.name].value !==
-              curr.checked) ||
-          (!isRadio &&
-            !isCheckbox &&
-            this.state.validationData.formValues[curr.name].value !==
-              curr.value)
-        ) {
+      if (curr.name) {
+        // existing field
+        if (this.state.validationData.formValues[curr.name]) {
+          const isCheckbox = curr.type === 'checkbox';
+          const isRadio = curr.type === 'radio';
+          if (
+            (isRadio &&
+              curr.checked &&
+              this.state.validationData.formValues[curr.name].value !==
+                curr.value) ||
+            (isCheckbox &&
+              this.state.validationData.formValues[curr.name].value !==
+                curr.checked) ||
+            (!isRadio &&
+              !isCheckbox &&
+              this.state.validationData.formValues[curr.name].value !==
+                curr.value)
+          ) {
+            acc[curr.name] = getUpdatedFormValue(curr, this.props);
+          }
+          // new field
+        } else {
           acc[curr.name] = getUpdatedFormValue(curr, this.props);
         }
-        // new field
-      } else {
-        acc[curr.name] = getUpdatedFormValue(curr, this.props);
       }
       return acc;
     }, {});
 
     const removedFields = Object.keys(
       this.state.validationData.formValues
-    ).filter(name => !currentFields.find(field => field.name === name));
+    ).filter(
+      name =>
+        !currentFields.find(field => {
+          if (field.name) {
+            return field.name === name;
+          }
+          return true;
+        })
+    );
 
     if (Object.keys(newOrChangedFields).length || removedFields.length) {
       // eslint-disable-next-line react/no-did-update-set-state
@@ -172,6 +183,7 @@ export default class ValidatedForm extends React.Component<
       children,
       formErrorClass,
       onFormChanged,
+      hideNameErrors,
       ...props
     } = this.props;
     const { submissionAttempted, formIsValid } = this.state.validationData;

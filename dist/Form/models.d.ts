@@ -12,6 +12,7 @@ export interface IValidatedFormState {
 }
 export declare type IsValidFunction = (val: any) => boolean;
 export interface IValidatedFormProps extends FormHTMLAttributes<HTMLFormElement> {
+    name: string;
     onInvalidSubmissionAttempt?: (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => void;
     onValidSubmissionAttempt?: (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => void;
     customValidators: {
@@ -20,7 +21,7 @@ export interface IValidatedFormProps extends FormHTMLAttributes<HTMLFormElement>
             errorText?: string;
         };
     };
-    name: string;
+    hideNameErrors: boolean;
     formErrorClass?: string;
     onFormChanged?: (updatedField: HTMLFormElement, updatedFormState: IValidatedFormState) => void;
 }

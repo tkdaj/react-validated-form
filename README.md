@@ -40,11 +40,13 @@ it has it's own onSubmit function, and after validating the data, it will either
 
 All regular attributes which can be applied to a form works here too except for onSubmit
 
-`name`: required for the form as well as ALL validatable fields
+`name`: required for the form as well as ALL validatable fields -- If you do not have a name on a field, you will get a error logged to your console. Since sometimes it is difficult to add a name to a field or impossible when using third party libraries, the next prop is available to mute those warnings.
 <br /><br />
 `onInvalidSubmissionAttempt`: If the form is submitted, but is invalid, this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
 <br /><br />
 `onValidSubmissionAttempt`: If the form is submitted and is valid this funcion will be called. Two parameters are passed - the submit event object and the object containing the validated form's values and errors.
+<br /><br />
+`hideNameErrors` `optional` as described in the `name` section of this API, names are required, so you will get an error logged to the console if one of your fields is missing a name by default. You can turn this off by setting `hideNameErrors` to `true`.
 <br /><br />
 `formErrorClass`: `optional` Specific error class to be applied to the entire form
 <br /><br />
