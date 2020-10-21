@@ -1,6 +1,6 @@
-## ValidateForms
+## ValidatedForms
 
-This project includes both a ValidateReduxForm and a regular ValidatedForm.
+This project includes both a ValidatedReduxForm and a regular ValidatedForm.
 The purpose of both is to take the headache out of validating forms for you!
 All you need to do is use one of these components instead of a regular `<form>` tag,
 and use standard html validation on your fields (like required, pattern, min, max, etc)
@@ -84,10 +84,10 @@ export type FormValues = {
 
 To use the standard `ValidatedForm` without redux, you use it in place of a normal `<form>` tag.
 Since the non-redux form does not have access to a global store to store the validated data in,
-there is a method specifically added to `ValidatedForm` which is meant to be accessed from
+there are 2 methods specifically added to `ValidatedForm` which are meant to be accessed from
 outside the form:
-`getFormData`
-In order to access this, create a ref object using `React.createRef()` or the `useRef(null)` hook.
+`getFormData` and `resetFormSubmitted`
+In order to access these, create a ref object using `React.createRef()` or the `useRef(null)` hook.
 Then, add the created ref to your `ValidatedForm` like:
 
 ```typescript
@@ -96,16 +96,17 @@ import { ValidatedForm } from '@tkdaj/react-validated-form';
 ```
 
 Once you have done that you can access the function using the ref. For example:
-`this.myFormRef.current.getFormData()`
+`this.myFormRef.current.getFormData()` or `this.myFormRef.current.resetFormSubmitted()`
 
 ## Using With Redux
 
-Since all of the form data is stored inside redux with this component, there is no publicly
-accessible `getFormData` function as shown in the "Using Without Redux" section above.
-For simplicity, all forms are stored inside redux under the name: validatedForms.
-If you want to get data from a form it will be `validatedForms.myFormName` where `myFormName`
-is the name of one of your `ValidatedReduxForm`s. The only boilerplate you need to do to
-set this up other than using the component is:
+Since all of the form data is stored inside redux with this component, there is no need for
+an accessible `getFormData` function as shown in the "Using Without Redux" section above, but
+`resetFormSubmitted` is still publicly available. In order to access it use a ref as shown
+in the instructions above under "Using Without Redux". For simplicity, all forms are stored
+inside redux under the name: validatedForms. If you want to get data from a form it will be
+`validatedForms.myFormName` where `myFormName` is the name of one of your `ValidatedReduxForm`s.
+The only boilerplate you need to do to set this up other than using the component is:
 
 ```typescript
 import { validatedForms } from '@tkdaj/react-validated-form';
