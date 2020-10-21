@@ -17,12 +17,15 @@ const mapDispatch = {
   updateValidatedForm,
 };
 
-type OwnProps = Omit<IValidatedFormProps, 'onFormChanged' | 'onSubmit'>;
+export type IValidatedReduxForm = Omit<
+  IValidatedFormProps,
+  'onFormChanged' | 'onSubmit'
+>;
 const connector = connect(mapState, mapDispatch, null, { forwardRef: true });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export class ValidatedReduxForm extends React.Component<
-  OwnProps & PropsFromRedux
+  IValidatedReduxForm & PropsFromRedux
 > {
   static defaultProps = {
     customValidators: {},

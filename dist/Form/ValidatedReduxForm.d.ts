@@ -1,7 +1,7 @@
 import React from 'react';
 import { ConnectedProps } from 'react-redux';
 import { IValidatedFormState, IValidatedFormProps } from './models';
-declare type OwnProps = Omit<IValidatedFormProps, 'onFormChanged' | 'onSubmit'>;
+export declare type IValidatedReduxForm = Omit<IValidatedFormProps, 'onFormChanged' | 'onSubmit'>;
 declare const connector: import("react-redux").InferableComponentEnhancerWithProps<{
     reduxForms: import("./validatedForm.reducer").IValidatedForms;
 } & {
@@ -17,7 +17,7 @@ declare const connector: import("react-redux").InferableComponentEnhancerWithPro
     };
 }, {}>;
 declare type PropsFromRedux = ConnectedProps<typeof connector>;
-export declare class ValidatedReduxForm extends React.Component<OwnProps & PropsFromRedux> {
+export declare class ValidatedReduxForm extends React.Component<IValidatedReduxForm & PropsFromRedux> {
     static defaultProps: {
         customValidators: {};
         formErrorClass: string;

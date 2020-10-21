@@ -1,7 +1,7 @@
 import React from 'react';
 import { IValidatedFormState, IValidatedFormProps } from './models';
-declare type ValidatedFormProps = Omit<IValidatedFormProps, 'onSubmit'>;
-export default class ValidatedForm extends React.Component<ValidatedFormProps, IValidatedFormState> {
+export declare type IValidatedForm = Omit<IValidatedFormProps, 'onSubmit'>;
+export default class ValidatedForm extends React.Component<IValidatedForm, IValidatedFormState> {
     static defaultProps: {
         customValidators: {};
         formErrorClass: string;
@@ -22,5 +22,4 @@ export default class ValidatedForm extends React.Component<ValidatedFormProps, I
     };
     render(): JSX.Element;
 }
-export {};
 //# sourceMappingURL=ValidatedForm.d.ts.map
