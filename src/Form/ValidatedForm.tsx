@@ -133,15 +133,7 @@ export default class ValidatedForm extends React.Component<
   };
 
   // This function makes the form data available at any time using a ref from outside this component
-  getFormData = () => ({
-    ...this.state,
-    formValues: Object.keys(this.state.formValues).reduce((values, currKey) => {
-      return {
-        ...values,
-        [currKey]: { ...this.state.formValues[currKey] },
-      };
-    }, {}),
-  });
+  getFormData = () => this.state;
 
   render() {
     const {

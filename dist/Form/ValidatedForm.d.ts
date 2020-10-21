@@ -16,9 +16,9 @@ export default class ValidatedForm extends React.Component<ValidatedFormProps, I
     formRef: React.RefObject<HTMLFormElement>;
     onFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     getFormData: () => {
-        formValues: {};
         submissionAttempted: boolean;
         formIsValid: boolean;
+        formValues: {};
     };
     render(): JSX.Element;
 }
