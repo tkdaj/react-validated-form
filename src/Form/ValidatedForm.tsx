@@ -35,7 +35,7 @@ export default class ValidatedForm extends React.Component<
           this.props.customValidators[field.name]?.isValid &&
           !this.props.customValidators[field.name]?.errorText
         ) {
-          console.error(
+          console.warn(
             'A custom error message must be provided when using a custom isValid function for field:',
             field
           );
@@ -45,8 +45,8 @@ export default class ValidatedForm extends React.Component<
           this.props as IValidatedFormProps
         );
         // If there is custom validation it requires custom errorText
-      } else if (isFieldValidatable(field) && !this.props.hideNameErrors) {
-        console.error(
+      } else if (isFieldValidatable(field) && !this.props.hideNameWarnings) {
+        console.warn(
           'You must have a name on all form fields within ValidatedForm',
           field
         );
@@ -183,7 +183,7 @@ export default class ValidatedForm extends React.Component<
       children,
       formErrorClass,
       onFormChanged,
-      hideNameErrors,
+      hideNameWarnings,
       ...props
     } = this.props;
     const { submissionAttempted, formIsValid } = this.state.validationData;

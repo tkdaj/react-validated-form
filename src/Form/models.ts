@@ -32,7 +32,7 @@ export interface IValidatedFormProps
       errorText?: string;
     };
   };
-  hideNameErrors: boolean;
+  hideNameWarnings: boolean;
   formErrorClass?: string;
   onFormChanged?: (
     updatedField: HTMLFormElement,

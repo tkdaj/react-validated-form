@@ -43,7 +43,7 @@ export class ValidatedReduxForm extends React.Component<
           this.props.customValidators[field.name]?.isValid &&
           !this.props.customValidators[field.name]?.errorText
         ) {
-          console.error(
+          console.warn(
             'A custom error message must be provided when using a custom isValid function for field:',
             field
           );
@@ -52,8 +52,8 @@ export class ValidatedReduxForm extends React.Component<
           field,
           this.props as IValidatedFormProps
         );
-      } else if (isFieldValidatable(field) && !this.props.hideNameErrors) {
-        console.error(
+      } else if (isFieldValidatable(field) && !this.props.hideNameWarnings) {
+        console.warn(
           'You must have a name on all form fields within ValidatedForm',
           field
         );
@@ -172,7 +172,7 @@ export class ValidatedReduxForm extends React.Component<
       reduxForms,
       name,
       formErrorClass,
-      hideNameErrors,
+      hideNameWarnings,
       ...props
     } = this.props;
     const reduxForm = reduxForms[name];
