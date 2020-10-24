@@ -11,7 +11,7 @@ declare type DemoState = {
 };
 export default class StandardFormDemo extends React.Component<{}, DemoState> {
     state: DemoState;
-    standardFormRef: React.RefObject<ValidatedForm>;
+    formRef: React.RefObject<ValidatedForm>;
     render(): JSX.Element;
 }
 export {};

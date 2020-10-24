@@ -79,14 +79,14 @@ export function getSharedFields(this: StandardFormDemo) {
         inputProps={{ pattern: '\\d+' }}
       />
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label htmlFor="new">test</label>
+      <label htmlFor="theselect">test</label>
       <select
         value={this.state.theselect}
         onChange={e => this.setState({ theselect: e.target.value })}
         onBlur={e => this.setState({ theselect: e.target.value })}
         required
         name="theselect"
-        id="new"
+        id="theselect"
       >
         <option value="">Default</option>
         <option value="1">1</option>
@@ -94,14 +94,8 @@ export function getSharedFields(this: StandardFormDemo) {
         <option value="3">3</option>
       </select>
       <button type="submit">Submit</button>
-      <button
-        onClick={() => {
-          // eslint-disable-next-line no-unused-expressions
-          (this.standardFormRef?.current as any)?.resetForm();
-        }}
-        type="button"
-      >
-        Reset standard form
+      <button onClick={this.formRef?.current?.resetFormSubmitted} type="button">
+        Reset form submitted value
       </button>
     </>
   );

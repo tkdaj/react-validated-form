@@ -24,14 +24,14 @@ export default class StandardFormDemo extends React.Component<{}, DemoState> {
     theselect: '',
   };
 
-  standardFormRef = React.createRef<ValidatedForm>();
+  formRef = React.createRef<ValidatedForm>();
 
   render() {
     return (
       <>
         <div className="standard-form-container">
           <ValidatedForm
-            ref={this.standardFormRef}
+            ref={this.formRef}
             className="standard-form"
             name="standardForm"
             noValidate

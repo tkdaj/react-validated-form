@@ -5,36 +5,99 @@ The purpose of both is to take the headache out of validating forms for you!
 All you need to do is use one of these components instead of a regular `<form>` tag,
 and use standard html validation on your fields (like required, pattern, min, max, etc)
 and the component keeps track of your errors for you. You can also add custom error messages
-and a custom function for validation logic per field. Here is an example:
+and a custom function for validation logic per field.
+The only standard form property this component doesn't accept is "onSubmit". That is because
+it has it's own onSubmit function, and after validating the data, it will either fire the
+`onValidSubmissionAttempt` or the `onInvalidSubmissionAttempt`.
+
+Here is an example:
 
 ```typescript
 
     import { ValidatedReduxForm } from '@tkdaj/react-validated-form';
+    import { TextField } from '@material-ui/core';
 
     <ValidatedReduxForm
         name="testForm"
         noValidate
         customValidators={{
-          field1: {
-            errorText: "You messed up",
-          },
-          field2: {
+          input1: {
               errorText: "Please enter a valid number."
-              isValid: (e) => !isNaN(parseInt(e.target.value))
-          }
+          },
+          theradios: {
+            errorText: "You messed up. The correct answer is 3!",
+            isValid: (e) => e.taget.value === '3'
+          },
         }}
         onValidSubmissionAttempt={(e, formValues) => {
-          console.log("valid submission");
+          console.log("valid submission", formValues);
         }}
         onInvalidSubmissionAttempt={(e, formValues) => {
-          console.log("invalid submission");
+          console.log("invalid submission", formValues);
         }}
       >
+        <input
+          checked={this.state.thecheckbox}
+          onChange={e => this.setState({ thecheckbox: e.target.checked })}
+          name="thecheckbox"
+          type="checkbox"
+          required
+        />
+        <label htmlFor="theradios">
+          <input
+            checked={this.state.theradios === '1'}
+            onChange={e => this.setState({ theradios: e.target.value })}
+            id="theradios"
+            name="theradios"
+            required
+            type="radio"
+            value="1"
+          />
+          <input
+            checked={this.state.theradios === '2'}
+            onChange={e => this.setState({ theradios: e.target.value })}
+            name="theradios"
+            type="radio"
+            value="2"
+          />
+          <input
+            checked={this.state.theradios === '3'}
+            onChange={e => this.setState({ theradios: e.target.value })}
+            name="theradios"
+            type="radio"
+            value="3"
+          />
+        </label>
+        <TextField
+          name="input1"
+          value={this.state.input1}
+          onChange={e => this.setState({ input1: e.target.value })}
+          margin="dense"
+          label="Input 1"
+          type="text"
+          required
+          inputProps={{ pattern: '\\d+' }}
+        />
+        <label htmlFor="theselect">Dropdown</label>
+        <select
+          value={this.state.theselect}
+          onChange={e => this.setState({ theselect: e.target.value })}
+          onBlur={e => this.setState({ theselect: e.target.value })}
+          required
+          name="theselect"
+          id="theselect"
+        >
+          <option value="">Default</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+        <button type="submit">Submit</button>
+        <button onClick={this.formRef?.current?.resetFormSubmitted} type="button">
+          Reset form submitted value
+        </button>
+      <ValidatedReduxForm />
 ```
-
-The only standard form property this component doesn't accept is "onSubmit". That is because
-it has it's own onSubmit function, and after validating the data, it will either fire the
-`onValidSubmissionAttempt` or the `onInvalidSubmissionAttempt`.
 
 ## API
 
@@ -61,9 +124,9 @@ customValidators: {
 };
 ```
 
-<br /><br />
+<br />
 
-`onFormChanged`: `optional` `[ValidatedForm] ONLY` It fires any time a form value is changed and the function is shaped as follows:
+`onFormChanged`: `optional` `[ValidatedForm ONLY]` It fires any time a form value is changed and the function is shaped as follows:
 
 ```typescript
   onFormChanged?: (

@@ -169,10 +169,19 @@ export default class ValidatedForm extends React.Component<
   // This function makes the form data available at any time using a ref from outside this component
   getFormData = () => this.state;
 
-  resetFormSubmitted = () =>
-    this.setState(state => ({
-      validationData: { ...state.validationData, submissionAttempted: false },
-    }));
+  resetFormSubmitted = () => {
+    this.setState(
+      state => ({
+        validationData: { ...state.validationData, submissionAttempted: false },
+      }),
+      () => {
+        this.props.onFormChanged?.(
+          this.formRef.current as HTMLFormElement,
+          this.state.validationData
+        );
+      }
+    );
+  };
 
   render() {
     const {

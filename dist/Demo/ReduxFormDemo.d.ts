@@ -17,7 +17,7 @@ declare const mapState: (state: IApplicationState) => {
 declare type DemoProps = ReturnType<typeof mapState>;
 export declare class ReduxFormDemo extends React.Component<DemoProps, DemoState> {
     state: DemoState;
-    reduxFormRef: React.RefObject<IValidatedReduxForm>;
+    formRef: React.RefObject<IValidatedReduxForm>;
     render(): JSX.Element;
 }
 declare const _default: import("react-redux").ConnectedComponent<typeof ReduxFormDemo, Pick<React.ClassAttributes<ReduxFormDemo> & {

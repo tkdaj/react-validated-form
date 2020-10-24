@@ -35,14 +35,14 @@ export class ReduxFormDemo extends React.Component<DemoProps, DemoState> {
     theselect: '',
   };
 
-  reduxFormRef = React.createRef<IValidatedReduxForm>();
+  formRef = React.createRef<IValidatedReduxForm>();
 
   render() {
     return (
       <>
         <div className="redux-form-container">
           <ValidatedReduxForm
-            ref={this.reduxFormRef}
+            ref={this.formRef}
             name="demoReduxForm"
             className="redux-form"
             noValidate
