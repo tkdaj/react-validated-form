@@ -29,7 +29,7 @@ export class ValidatedReduxForm extends React.Component<
 > {
   static defaultProps = {
     customValidators: {},
-    hideNameErrors: false,
+    hideNameWarnings: false,
     formErrorClass: 'validated-form-error',
   };
 

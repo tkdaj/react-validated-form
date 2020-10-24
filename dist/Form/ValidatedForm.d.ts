@@ -6,7 +6,7 @@ export default class ValidatedForm extends React.Component<IValidatedForm, {
 }> {
     static defaultProps: {
         customValidators: {};
-        hideNameErrors: boolean;
+        hideNameWarnings: boolean;
         formErrorClass: string;
     };
     state: {

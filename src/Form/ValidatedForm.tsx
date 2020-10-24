@@ -14,7 +14,7 @@ export default class ValidatedForm extends React.Component<
 > {
   static defaultProps = {
     customValidators: {},
-    hideNameErrors: false,
+    hideNameWarnings: false,
     formErrorClass: 'validated-form-error',
   };
 

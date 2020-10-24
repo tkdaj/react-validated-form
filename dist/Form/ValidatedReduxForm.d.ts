@@ -20,7 +20,7 @@ declare type PropsFromRedux = ConnectedProps<typeof connector>;
 export declare class ValidatedReduxForm extends React.Component<IValidatedReduxForm & PropsFromRedux> {
     static defaultProps: {
         customValidators: {};
-        hideNameErrors: boolean;
+        hideNameWarnings: boolean;
         formErrorClass: string;
     };
     componentDidMount(): void;
