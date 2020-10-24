@@ -21,7 +21,7 @@ export interface IValidatedFormProps extends FormHTMLAttributes<HTMLFormElement>
             errorText?: string;
         };
     };
-    hideNameWarnings: boolean;
+    hideNameWarnings?: boolean;
     formErrorClass?: string;
     onFormChanged?: (updatedField: HTMLFormElement, updatedFormState: IValidatedFormState) => void;
 }
