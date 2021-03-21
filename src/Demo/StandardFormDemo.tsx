@@ -1,17 +1,7 @@
 /* eslint-disable react/no-unused-state */
 import React from 'react';
 import ValidatedForm from '../Form/ValidatedForm';
-import { getSharedFields } from './sharedFormFields';
-
-type DemoState = {
-  standardFormData: string;
-  thecheckbox: boolean;
-  theradios: string;
-  theradios2: string;
-  input1: string;
-  input2: string;
-  theselect: string;
-};
+import { getSharedFields, DemoState } from './sharedFormFields';
 
 export default class StandardFormDemo extends React.Component<{}, DemoState> {
   state: DemoState = {

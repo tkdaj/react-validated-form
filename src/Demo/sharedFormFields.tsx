@@ -3,6 +3,16 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 import StandardFormDemo from './StandardFormDemo';
 
+export type DemoState = {
+  standardFormData: string;
+  thecheckbox: boolean;
+  theradios: string;
+  theradios2: string;
+  input1: string;
+  input2: string;
+  theselect: string;
+};
+
 export function getSharedFields(this: StandardFormDemo) {
   return (
     <>
@@ -52,6 +62,7 @@ export function getSharedFields(this: StandardFormDemo) {
           checked={this.state.theradios2 === '2'}
           onChange={e => this.setState({ theradios2: e.target.value })}
           name="theradios2"
+          required
           type="radio"
           value="2"
         />
@@ -59,6 +70,7 @@ export function getSharedFields(this: StandardFormDemo) {
           checked={this.state.theradios2 === '3'}
           onChange={e => this.setState({ theradios2: e.target.value })}
           name="theradios2"
+          required
           type="radio"
           value="3"
         />

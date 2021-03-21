@@ -78,6 +78,7 @@ export default class ValidatedForm extends React.Component<
         if (this.state.validationData.formValues[curr.name]) {
           const isCheckbox = curr.type === 'checkbox';
           const isRadio = curr.type === 'radio';
+          // check if a value has been changed
           if (
             (isRadio &&
               curr.checked &&
@@ -105,12 +106,7 @@ export default class ValidatedForm extends React.Component<
       this.state.validationData.formValues
     ).filter(
       name =>
-        !currentFields.find(field => {
-          if (field.name) {
-            return field.name === name;
-          }
-          return true;
-        })
+        !currentFields.find(field => (field.name ? field.name === name : true))
     );
 
     if (Object.keys(newOrChangedFields).length || removedFields.length) {

@@ -5,18 +5,8 @@ import { IApplicationState } from 'store';
 import ValidatedReduxForm, {
   ValidatedReduxForm as IValidatedReduxForm,
 } from '../Form/ValidatedReduxForm';
-import { getSharedFields } from './sharedFormFields';
+import { getSharedFields, DemoState } from './sharedFormFields';
 import './demo.scss';
-
-type DemoState = {
-  standardFormData: string;
-  thecheckbox: boolean;
-  theradios: string;
-  theradios2: string;
-  input1: string;
-  input2: string;
-  theselect: string;
-};
 
 const mapState = (state: IApplicationState) => ({
   reduxForms: state.validatedForms,
@@ -25,6 +15,10 @@ const mapState = (state: IApplicationState) => ({
 type DemoProps = ReturnType<typeof mapState>;
 
 export class ReduxFormDemo extends React.Component<DemoProps, DemoState> {
+  // The ValidatedReduxForm uses redux to store the validation data, but
+  // you are responsible for storing your application's state
+  // data.  If you want to store the form values in local state
+  // or redux is completely up to the user.
   state: DemoState = {
     standardFormData: '',
     thecheckbox: true,
