@@ -1,5 +1,7 @@
 ## ValidatedForms
 
+NPM repo: https://www.npmjs.com/package/@tkdaj/react-validated-form
+
 This project includes both a ValidatedReduxForm and a regular ValidatedForm.
 The purpose of both is to take the headache out of validating forms for you!
 All you need to do is use one of these components instead of a regular `<form>` tag,
