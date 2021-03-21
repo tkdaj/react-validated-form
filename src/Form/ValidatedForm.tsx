@@ -80,10 +80,6 @@ export default class ValidatedForm extends React.Component<
           const isRadio = curr.type === 'radio';
           // check if a value has been changed
           if (
-            (isRadio &&
-              curr.checked &&
-              this.state.validationData.formValues[curr.name].value !==
-                curr.value) ||
             (isCheckbox &&
               this.state.validationData.formValues[curr.name].value !==
                 curr.checked) ||
@@ -93,6 +89,16 @@ export default class ValidatedForm extends React.Component<
                 curr.value)
           ) {
             acc[curr.name] = getUpdatedFormValue(curr, this.props);
+          } else if (
+            isRadio &&
+            this.state.validationData.formValues[curr.name].value !==
+              getUpdatedFormValue(curr, this.props, currentFields).value
+          ) {
+            acc[curr.name] = getUpdatedFormValue(
+              curr,
+              this.props,
+              currentFields
+            );
           }
           // new field
         } else {

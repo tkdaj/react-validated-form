@@ -79,22 +79,23 @@ export class ValidatedReduxForm extends React.Component<
           const isCheckbox = curr.type === 'checkbox';
           const isRadio = curr.type === 'radio';
           if (
-            (isRadio &&
-              curr.checked &&
-              fields[curr.name].value !== curr.value) ||
             (isCheckbox && fields[curr.name].value !== curr.checked) ||
             (!isRadio && !isCheckbox && fields[curr.name].value !== curr.value)
           ) {
+            acc[curr.name] = getUpdatedFormValue(curr, this.props);
+          } else if (
+            isRadio &&
+            fields[curr.name].value !==
+              getUpdatedFormValue(curr, this.props, currentFields).value
+          ) {
             acc[curr.name] = getUpdatedFormValue(
               curr,
-              this.props as IValidatedFormProps
+              this.props,
+              currentFields
             );
           }
         } else {
-          acc[curr.name] = getUpdatedFormValue(
-            curr,
-            this.props as IValidatedFormProps
-          );
+          acc[curr.name] = getUpdatedFormValue(curr, this.props);
         }
       }
       return acc;

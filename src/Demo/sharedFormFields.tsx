@@ -50,8 +50,8 @@ export function getSharedFields(this: StandardFormDemo) {
       </label>
       <label htmlFor="theradios2">
         <input
-          onChange={e => this.setState({ theradios2: e.target.value })}
           checked={this.state.theradios2 === '1'}
+          onChange={e => this.setState({ theradios2: e.target.value })}
           id="theradios2"
           name="theradios2"
           required

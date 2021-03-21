@@ -31,14 +31,20 @@ export const getFieldsInForm = (form: HTMLFormElement | null) => {
 
 export const getUpdatedFormValue = (
   el: HTMLFormElement,
-  props: IValidatedFormProps
+  props: IValidatedFormProps,
+  allCurrentFormFields: HTMLFormElement[] = []
 ) => {
   let { value } = el;
   const { type, checked, name } = el;
   if (type === 'checkbox') {
     value = checked;
   }
-  el.setCustomValidity('');
+  if (type === 'radio') {
+    value =
+      allCurrentFormFields
+        ?.filter(field => field.name === name)
+        .find(field => field.checked)?.value ?? null;
+  }
   const isValid = props.customValidators[name]?.isValid;
   const valid = isValid ? isValid(value) : el.checkValidity();
   let error = props.customValidators[name]?.errorText as string;

@@ -17,8 +17,8 @@ type DemoProps = ReturnType<typeof mapState>;
 export class ReduxFormDemo extends React.Component<DemoProps, DemoState> {
   // The ValidatedReduxForm uses redux to store the validation data, but
   // you are responsible for storing your application's state
-  // data.  If you want to store the form values in local state
-  // or redux is completely up to the user.
+  // data.  Form values can be stored in local state or redux
+  // based on user discretion.
   state: DemoState = {
     standardFormData: '',
     thecheckbox: true,
