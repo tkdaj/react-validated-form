@@ -19,8 +19,8 @@ export const getFieldsInForm = (form: HTMLFormElement | null) => {
     if (fieldSet.has(field.name) && field.type !== 'radio') {
       throw Error(
         `All fields within a ValidatedForm must have unique names (except radio buttons).
-        Field with name: ${field.name} ${
-          form.name ? `within the form: ${form.name} ` : ''
+        Field with name "${field.name}" ${
+          form.name ? `within the form "${form.name}" ` : ''
         }is a duplicate`
       );
     }
