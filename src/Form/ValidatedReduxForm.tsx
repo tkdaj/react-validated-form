@@ -17,10 +17,7 @@ const mapDispatch = {
   updateValidatedForm,
 };
 
-export type IValidatedReduxForm = Omit<
-  IValidatedFormProps,
-  'onFormChanged' | 'onSubmit'
->;
+export type IValidatedReduxForm = Omit<IValidatedFormProps, 'onFormChanged'>;
 const connector = connect(mapState, mapDispatch, null, { forwardRef: true });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -48,10 +45,7 @@ export class ValidatedReduxForm extends React.Component<
             field
           );
         }
-        formValues[field.name] = getUpdatedFormValue(
-          field,
-          this.props as IValidatedFormProps
-        );
+        formValues[field.name] = getUpdatedFormValue(field, this.props);
       } else if (isFieldValidatable(field) && !this.props.hideNameWarnings) {
         console.warn(
           'You must have a name on all form fields within ValidatedForm',

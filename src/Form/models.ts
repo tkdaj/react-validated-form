@@ -16,7 +16,7 @@ export interface IValidatedFormState {
 export type IsValidFunction = (val: any) => boolean;
 
 export interface IValidatedFormProps
-  extends FormHTMLAttributes<HTMLFormElement> {
+  extends Omit<FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   name: string;
   onInvalidSubmissionAttempt?: (
     e: React.FormEvent<HTMLFormElement>,

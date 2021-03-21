@@ -1,5 +1,3 @@
-// import { ValidatedReduxForm } from './ValidatedReduxForm';
-// import ValidatedForm from './ValidatedForm';
 import { IValidatedFormProps } from './models';
 
 const nonValidatableTags = ['BUTTON', 'OBJECT'];
@@ -45,6 +43,7 @@ export const getUpdatedFormValue = (
         ?.filter(field => field.name === name)
         .find(field => field.checked)?.value ?? null;
   }
+  el.setCustomValidity('');
   const isValid = props.customValidators[name]?.isValid;
   const valid = isValid ? isValid(value) : el.checkValidity();
   let error = props.customValidators[name]?.errorText as string;
