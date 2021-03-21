@@ -102,12 +102,7 @@ export class ValidatedReduxForm extends React.Component<
 
     const removedFields = Object.keys(theForm.formValues).filter(
       name =>
-        !currentFields.find(field => {
-          if (field.name) {
-            return field.name === name;
-          }
-          return true;
-        })
+        !currentFields.find(field => (field.name ? field.name === name : true))
     );
 
     if (Object.keys(newOrChangedFields).length || removedFields.length) {

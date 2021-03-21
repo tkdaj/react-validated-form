@@ -10,9 +10,19 @@ export const isFieldValidatable = (el: HTMLFormElement) => {
 
 export const getFieldsInForm = (form: HTMLFormElement | null) => {
   if (!form) return [];
-  return Array.from(form.elements).filter(el =>
+  const validatableFields = Array.from(form.elements).filter(el =>
     isFieldValidatable(el as HTMLFormElement)
   ) as HTMLFormElement[];
+  const fieldSet = new Set();
+  validatableFields.forEach(field => {
+    if (fieldSet.has(field.name)) {
+      throw Error(
+        `All fields within a ValidatedForm must have unique names.  Field with name: ${field.name} within the form: ${form.name} is a duplicate`
+      );
+    }
+    fieldSet.add(field.name);
+  });
+  return validatableFields;
 };
 
 export const getUpdatedFormValue = (
