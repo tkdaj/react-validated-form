@@ -124,6 +124,8 @@ customValidators: {
 };
 ```
 
+If you don't supply any custom error text, then the default HTML5 error text will be used.
+
 <br />
 
 `onFormChanged`: `optional` `[ValidatedForm ONLY]` It fires any time a form value is changed and the function is shaped as follows:
@@ -136,8 +138,6 @@ customValidators: {
 ```
 
 <br />
-
-If you don't supply any custom error text, then the default HTML5 error text will be used.
 
 ## Data Structure
 
