@@ -1,6 +1,6 @@
 {
   "name": "@tkdaj/react-validated-form",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A self-validating React form component",
   "author": "tkdaj <tkdaj.packages@gmail.com>",
   "repository": {
@@ -12,11 +12,15 @@
   "types": "dist/buildIndex.d.ts",
   "license": "MIT",
   "keywords": [
+    "react",
+    "redux",
+    "form",
     "validation",
     "validate",
-    "form",
-    "redux",
-    "react"
+    "validator",
+    "forms",
+    "form-validation",
+    "react-component"
   ],
   "scripts": {
     "rimraf": "./node_modules/rimraf/bin.js",
