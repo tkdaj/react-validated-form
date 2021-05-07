@@ -1,12 +1,15 @@
 import { IValidatedFormProps } from './models';
 
-const nonValidatableTags = ['BUTTON', 'OBJECT'];
+const nonValidatableTags = ['BUTTON', 'OBJECT', 'FIELDSET'];
 
 export const isFieldValidatable = (el: HTMLFormElement) => {
   return !nonValidatableTags.includes(el.tagName);
 };
 
-export const getFieldsInForm = (form: HTMLFormElement | null) => {
+export const getFieldsInForm = (
+  form: HTMLFormElement | null,
+  hideNameWarnings = false
+) => {
   if (!form) return [];
   const validatableFields = Array.from(form.elements).filter(el =>
     isFieldValidatable(el as HTMLFormElement)
@@ -14,7 +17,11 @@ export const getFieldsInForm = (form: HTMLFormElement | null) => {
 
   const fieldSet = new Set();
   validatableFields.forEach(field => {
-    if (fieldSet.has(field.name) && field.type !== 'radio') {
+    if (
+      fieldSet.has(field.name) &&
+      field.type !== 'radio' &&
+      !hideNameWarnings
+    ) {
       console.error(
         `All fields within a ValidatedForm must have unique names (except radio buttons).
         Field with name "${field.name}" ${

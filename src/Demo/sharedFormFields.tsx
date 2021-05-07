@@ -81,6 +81,7 @@ export function getSharedFields(this: StandardFormDemo) {
         onChange={e => this.setState({ input1: e.target.value })}
       />
       <TextField
+        variant="outlined"
         name="input2"
         value={this.state.input2}
         onChange={e => this.setState({ input2: e.target.value })}

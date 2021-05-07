@@ -1,10 +1,6 @@
 import React from 'react';
 import { FormValues, IValidatedFormState, IValidatedFormProps } from './models';
-import {
-  getFieldsInForm,
-  isFieldValidatable,
-  getUpdatedFormValue,
-} from './shared';
+import { getFieldsInForm, getUpdatedFormValue } from './shared';
 
 export default class ValidatedForm extends React.Component<
   IValidatedFormProps,
@@ -27,29 +23,26 @@ export default class ValidatedForm extends React.Component<
   componentDidMount() {
     const formValues: FormValues = {};
     // Check to make sure all fields have a 'name'
-    getFieldsInForm(this.formRef?.current).forEach(field => {
-      if (field.name) {
-        if (
-          this.props.customValidators[field.name]?.isValid &&
-          !this.props.customValidators[field.name]?.errorText
-        ) {
-          console.warn(
-            'A custom error message must be provided when using a custom isValid function for field:',
-            field
+    getFieldsInForm(this.formRef?.current, this.props.hideNameWarnings).forEach(
+      field => {
+        if (field.name) {
+          if (
+            this.props.customValidators[field.name]?.isValid &&
+            !this.props.customValidators[field.name]?.errorText
+          ) {
+            console.warn(
+              'A custom error message must be provided when using a custom isValid function for field:',
+              field
+            );
+          }
+          formValues[field.name] = getUpdatedFormValue(
+            field,
+            this.props as IValidatedFormProps
           );
+          // If there is custom validation it requires custom errorText
         }
-        formValues[field.name] = getUpdatedFormValue(
-          field,
-          this.props as IValidatedFormProps
-        );
-        // If there is custom validation it requires custom errorText
-      } else if (isFieldValidatable(field) && !this.props.hideNameWarnings) {
-        console.warn(
-          'You must have a name on all form fields within ValidatedForm',
-          field
-        );
       }
-    });
+    );
     // Initialize the form
     this.setState(
       {
@@ -69,7 +62,10 @@ export default class ValidatedForm extends React.Component<
   }
 
   componentDidUpdate() {
-    const currentFields = getFieldsInForm(this.formRef.current);
+    const currentFields = getFieldsInForm(
+      this.formRef.current,
+      this.props.hideNameWarnings
+    );
     const newOrChangedFields = currentFields.reduce((acc, curr) => {
       if (curr.name) {
         // existing field

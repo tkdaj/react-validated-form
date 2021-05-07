@@ -3,11 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { IApplicationState } from 'store';
 import { IValidatedFormState, IValidatedFormProps, FormValues } from './models';
 import { updateValidatedForm } from './validatedForm.actions';
-import {
-  getFieldsInForm,
-  isFieldValidatable,
-  getUpdatedFormValue,
-} from './shared';
+import { getFieldsInForm, getUpdatedFormValue } from './shared';
 
 const mapState = (state: IApplicationState) => ({
   reduxForms: state.validatedForms,
@@ -33,26 +29,23 @@ export class ValidatedReduxForm extends React.Component<
   componentDidMount() {
     // Check to make sure all fields have a 'name'
     const formValues: FormValues = {};
-    getFieldsInForm(this.formRef?.current).forEach(field => {
-      if (field.name) {
-        // If there is custom validation it requires custom errorText
-        if (
-          this.props.customValidators[field.name]?.isValid &&
-          !this.props.customValidators[field.name]?.errorText
-        ) {
-          console.warn(
-            'A custom error message must be provided when using a custom isValid function for field:',
-            field
-          );
+    getFieldsInForm(this.formRef?.current, this.props.hideNameWarnings).forEach(
+      field => {
+        if (field.name) {
+          // If there is custom validation it requires custom errorText
+          if (
+            this.props.customValidators[field.name]?.isValid &&
+            !this.props.customValidators[field.name]?.errorText
+          ) {
+            console.warn(
+              'A custom error message must be provided when using a custom isValid function for field:',
+              field
+            );
+          }
+          formValues[field.name] = getUpdatedFormValue(field, this.props);
         }
-        formValues[field.name] = getUpdatedFormValue(field, this.props);
-      } else if (isFieldValidatable(field) && !this.props.hideNameWarnings) {
-        console.warn(
-          'You must have a name on all form fields within ValidatedForm',
-          field
-        );
       }
-    });
+    );
     this.props.updateValidatedForm({
       formName: this.props.name,
       newFormState: {
@@ -65,7 +58,10 @@ export class ValidatedReduxForm extends React.Component<
 
   componentDidUpdate() {
     const theForm: IValidatedFormState = this.props.reduxForms[this.props.name];
-    const currentFields = getFieldsInForm(this.formRef.current);
+    const currentFields = getFieldsInForm(
+      this.formRef.current,
+      this.props.hideNameWarnings
+    );
     const newOrChangedFields = currentFields.reduce((acc, curr) => {
       if (curr.name) {
         const { formValues: fields } = theForm;
